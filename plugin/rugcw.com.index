@@ -1,0 +1,4 @@
+<?php
+	$firstpage_plugin["rugcw.com"]="rugcw.com.$first_plug_ext";
+	$supported_service[]="rugcw.com";
+?>

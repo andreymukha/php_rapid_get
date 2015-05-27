@@ -1,0 +1,4 @@
+<?php
+	$firstpage_plugin["getfile.biz"]="getfile.biz.$first_plug_ext";
+	$supported_service[]="getfile.biz";
+?>

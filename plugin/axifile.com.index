@@ -1,0 +1,6 @@
+<?php
+	$firstpage_plugin["axifile.com"]="axifile.com.$first_plug_ext";
+	$firstpage_plugin["www.axifile.com"]="axifile.com.$first_plug_ext";
+	$supported_service[]="axifile.com";
+	$supported_service[]="www.axifile.com";
+?>

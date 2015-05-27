@@ -1,0 +1,82 @@
+<?php
+	$location=$LINK;
+	do
+		{
+			$newref=$location;
+			$Url2=parse_url(trim($location));
+			$location="";
+
+			$page = geturl($Url2["host"], defport($Url2), $Url2["path"].($Url2["query"] ? "?".$Url2["query"] : ""), 0, 0, 0, 0, $_GET["proxy"],$pauth);
+       		$location = $page ? trim(cut_str($page,"Location: ","\n")) : "";
+		}
+	while ($page && $location);
+	$Referer=$newref;
+
+
+	is_page($page);
+	is_present($page,"Sorry, this file is no longer available.","Sorry, this file is no available.");
+	is_notpresent($page,"Size: ","Sorry, Filename not found in this page.");
+	is_notpresent($page,'Click here to begin your download','Not allowed for free download');
+
+	$second_url=cut_str($page,'<p style="margin:30px 0 20px">',"</p>");
+	$second_url=cut_str($second_url, '<a href="','" id="basicLink">');
+
+	if (!$second_url)
+		{
+			html_error("Error retrive second page link".$page);
+		}
+          $second_url='http://www.filefactory.com/'.$second_url;
+
+	$Url2=parse_url($second_url);
+	$page = geturl($Url2["host"], defport($Url2), $Url2["path"], $Referer, 0, 0, 0, $_GET["proxy"],$pauth);
+	//$cookies2 = GetCookies($page,true);
+
+	is_page($page);
+	if (strstr($page,'/check/?'))
+		{
+			$cap_page=cut_str($page,'src="/check/?','"');
+			if (!$cap_page)
+				{
+					html_error('This service change procect code <br /> Изменён метод защиты ');
+				}
+			// http://www.filefactory.com/check/?f=4bc9f2&b=5&h=7b6e98af44b26599  // page
+			// http://www.filefactory.com/captcha2/captcha.php?f=4bc9f2&h=7b6e98af44b26599 // img
+			$cap_page=str_replace('&amp;','&',$cap_page);
+			$cap_page=str_replace(';','&',$cap_page);
+			$access_image_url='http://www.filefactory.com/captcha2/captcha.php?'.$cap_page;
+			$cap_page='http://www.filefactory.com/check/?'.$cap_page;
+			$newlink = ($loadcaptha_old === true) ? $access_image_url : "$PHP_SELF?command=image&link=".urlencode(base64_encode($access_image_url))."&ref=".urlencode(base64_encode("http://ifolder.ru/")).($_GET["useproxy"] == "on" ? "&useproxy=on&proxy=".$_GET["proxy"] : "").($pauth ? "&pauth=".urlencode($pauth) : "");
+
+			echo "<form action=$PHP_SELF method=post>\n";
+			echo "<input type=hidden name=command value=second>\n";
+			echo "<input type=hidden name=services value='filefactory.com'>\n";
+			echo "<input type=hidden name=access_image_url value='".urlencode(base64_encode($newlink))."'>\n";
+			echo "<input type=hidden name=formurl value='".urlencode(base64_encode($cap_page))."'>\n";
+
+			echo "<input type=hidden name=saveto value=".$_REQUEST[saveto].">\n";
+			echo "<input type=hidden name=savedir value=".urlencode($_REQUEST[savedir]).">\n";
+			echo "<input type=hidden name=ref value=".urlencode(base64_encode($Referer)).">\n";
+			echo "<input type=hidden name=orlink value=".urlencode(base64_encode($OR_LINK ? $OR_LINK : $LINK)).">\n";
+
+			echo "<input type=hidden name=link value=".urlencode(base64_encode($LINK)).">\n";
+			echo ($_REQUEST["add_comment"] ? "<input type=hidden name=add_comment value=on>\n<input type=hidden name=comment value=".urlencode($_REQUEST[comment]).">\n" : "");
+			echo "<input type=hidden name=domail value=".$_GET[domail].">\n";
+			echo "<input type=hidden name=email value=".$_GET[email].">\n";
+			echo "<input type=hidden name=useproxy value=".$_GET[useproxy].">\n";
+			echo "<input type=hidden name=proxy value=".$_GET[proxy].">\n";
+			echo "<input type=hidden name=split value=".$_GET[split].">\n";
+			echo "<input type=hidden name=method value=".$_GET[method].">\n";
+			echo "<input type=hidden name=partSize value=".$_GET[partSize].">\n";
+			echo "<input type=hidden name=showdirect value=".($_GET["showdirect"] == "on" ? "on" : "").">\n";
+			echo ($pauth ? "<input type=hidden name=pauth value=".urlencode($pauth).">\n" : "");
+
+			echo "<h3>Please enter <img alt='".$access_image_url."' align=middle src=".$newlink." width=183 height=50> here: <input type=text name=accesscode size=6 maxlength=5>  <input type=\"submit\" name=\"actionstring\" value=\"Download file\"></h3>\n";
+			echo "</form>\n";
+
+			exit;
+		}
+
+	html_error('This service change procect code <br /> Изменён метод защиты ');
+
+#ONLY FOR RAPID GET PRO. update of 31.12.2007
+?>

@@ -1,0 +1,23 @@
+<?php
+    if (preg_match('/\\w{25,40}/', $Url['query'], $regs))
+        $ID = $regs[0];
+    else
+        html_error("Error retrive ID / Ошибка получения ID клипа");
+    $new_url = "http://video.rutube.ru/".$ID;
+    $Url = parse_url($new_url);    
+    
+	$page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), 0, 0, 0, 0, $_GET["proxy"] ,$pauth);
+	is_page($page);
+    is_notpresent($page,"Location:","Error Re-location ru-tube! / Ошибка перенаправления!");
+    $action_url = cut_str($page,"Location: ","\r\n");
+    if (!$action_url) html_error("Error retrive location Url / Ошибка получения адреса перенаправления!");
+    $tmp = cut_str($action_url,"file=","&");
+    $action_url = urldecode($tmp);
+    $url = parse_url($action_url);
+    $FileName = md5($action_url).".flv"; // генерим новое имя файла
+           
+	insert_location("$PHP_SELF?command=download&FileName=".urlencode(base64_encode($FileName))."&host=".urlencode(base64_encode($url[host]))."&path=".urlencode(base64_encode($url[path].($url["query"] ? "?".$url["query"] : "")))."&referer=".urlencode(base64_encode($Referer))."&email=".($_GET["domail"] ? $_GET["email"] : "")."&partSize=".($_GET[split] ? $_GET[partSize] : "")."&method=".$_GET[method]."&proxy=".($_GET["useproxy"] ? $_GET["proxy"] : "")."&saveto=".urlencode($_GET["savedir"])."&orlink=".urlencode(base64_encode($_GET["orlink"]))."&link=".urlencode(base64_encode($action_url)).($_REQUEST["add_comment"] ? "&add_comment=on&comment=".urlencode($_REQUEST[comment]) : "").($pauth ? "&pauth=".urlencode($pauth) : "") ,$locat,$_GET["showdirect"] == "on");
+    ?>
+    
+# Автор плагина для rutube Director Of Zoo (ru-board member 'kamyshew'). Only for RapidgetPro. No Rapidkill!!! No Checkmote!!!    
+# Based by source - Triton

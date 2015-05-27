@@ -1,0 +1,6 @@
+<?php
+	$firstpage_plugin["up-file.com"]="up-file.com.$first_plug_ext";
+	$firstpage_plugin["www.up-file.com"]="up-file.com.$first_plug_ext";
+	$supported_service[]="up-file.com";
+	$supported_service[]="www.up-file.com";
+?>

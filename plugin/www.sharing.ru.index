@@ -1,0 +1,4 @@
+<?php
+	$firstpage_plugin["www.sharing.ru"]="www.sharing.ru.$first_plug_ext";
+	$supported_service[]="www.sharing.ru";
+?>

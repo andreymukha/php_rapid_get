@@ -1,0 +1,4 @@
+<?php
+	$firstpage_plugin["fileho.com"]="fileho.com.$first_plug_ext";
+	$supported_service[]="fileho.com";
+?>

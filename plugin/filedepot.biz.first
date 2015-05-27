@@ -1,0 +1,23 @@
+<?php
+	$page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), 0, 0, 0, 0, $_GET["proxy"],$pauth);
+	is_page($page);
+
+	is_present($page,'Ungültiger Download Link','Error file ID');
+	is_notpresent($page,'Download starten','Error in page or change protect method');
+	$Href=trim(cut_str(strstr($page,'value="Download starten"'),"window.location=\\'","\\'"));
+	
+	if (!$Href) { html_error('Error retrive link');	}
+
+	if (strstr($page,'countdown();'))
+		{
+			$cvar=cut_str($page,"Download bereit in '+","+'");
+			$countDown = cut_str($page, "$cvar=", ";");
+			insert_timer($countDown, "Waiting link timelock.","",true);
+			
+		}
+
+	$Url = parse_url($Href);
+	$FileName = !$FileName ? basename($Url["path"]) : $FileName;
+
+	insert_location("$PHP_SELF?command=download&FileName=".urlencode(base64_encode($FileName))."&host=".urlencode(base64_encode($Url[host]))."&path=".urlencode(base64_encode($Url[path].($Url["query"] ? "?".$Url["query"] : "")))."&referer=".urlencode(base64_encode($Referer)).addmailtolink_2()."&proxy=".($_GET["useproxy"] ? $_GET["proxy"] : "")."&saveto=".urlencode($_GET["savedir"])."&orlink=".urlencode(base64_encode($_GET["orlink"]))."&link=".urlencode(base64_encode($Href)).($_REQUEST["add_comment"] ? "&add_comment=on&comment=".urlencode($_REQUEST[comment]) : "").($pauth ? "&pauth=".urlencode($pauth) : "") ,$Href,$_GET["showdirect"] == "on");
+?>

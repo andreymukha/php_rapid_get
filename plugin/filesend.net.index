@@ -1,0 +1,7 @@
+<?php
+	$firstpage_plugin["filesend.net"]="filesend.net.$first_plug_ext";
+	$supported_service[]="filesend.net";
+
+	$subdomain_plugin[]="filesend.net";
+#	$subreplace_plugin["filesend.net"]=true;
+?>

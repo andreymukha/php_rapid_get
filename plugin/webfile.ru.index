@@ -1,0 +1,4 @@
+<?php
+	$firstpage_plugin["webfile.ru"]="webfile.ru.$first_plug_ext";
+	$supported_service[]="webfile.ru";
+?>

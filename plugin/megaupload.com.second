@@ -1,0 +1,110 @@
+<?php
+	$disable_timer=false;
+
+	$agent.="NSIS_InetLoad (Mozilla)";
+
+	$post["d"]=$_REQUEST["fileid"];
+	$post["imagecode"]=$_REQUEST["imagecode"];
+	$post["imagestring"]=$_REQUEST["accesscode"];
+	$post["megavar"]=$_REQUEST["megavar"];
+	
+	$turl=$Url["scheme"]."://".$Url["host"].'/';
+	
+	$url=parse_url($turl);
+	
+	$cookies[]="l=en; domain=.megaupload.com; host=/";
+	
+	$page = geturl($url["host"], defport($url), $url["path"].($url["query"] ? "?".$url["query"] : ""), $Referer, $cookies, $post, 0, $_GET["proxy"],$pauth);
+	
+	is_page($page);
+
+	if (strstr($page,"All download slots") && strstr($page,"assigned to your country"))  
+		{
+			html_error("All download slots assigned to your country are in use");
+		}
+	
+	if (strstr($page,'capgen.php'))
+		{
+			echo "<h2>Error entered cod</h2>\n";
+		
+			$imagecode=cut_str($page,'<input type="hidden" name="imagecode" value="','"');
+			$capcode=cut_str($page,'capgen.php?','"');
+			
+			$access_image_url=$Url["scheme"]."://".$Url["host"]."/capgen.php?".$capcode;
+
+			$newlink=(($loadcaptha_old === true) || ((strpos($access_image_url,'https://') === 0) && ($ssl_image_direct === true))) ? $access_image_url : "$PHP_SELF?command=image&link=".urlencode(base64_encode($access_image_url))."&ref=".urlencode(base64_encode("http://megaupload.com.com/")).($_GET["useproxy"] == "on" ? "&useproxy=on&proxy=".$_GET["proxy"] : "").($pauth ? "&pauth=".urlencode($pauth) : "");
+
+			echo "<form action=$PHP_SELF method=post>\n";
+			echo "<input type=hidden name=command value=second>\n";
+			echo "<input type=hidden name=services value='megaupload.com'>\n";
+			echo "<input type=hidden name=host value='".$Url["host"]."'>\n";
+			
+			echo "<input type=hidden name=fileid value='".$_REQUEST[fileid]."'>\n";
+			echo "<input type=hidden name=imagecode value='$imagecode'>\n";
+			echo "<input type=hidden name=megavar value='".cut_str($page,'<input type="hidden" name="megavar" value="','"')."'>\n";
+
+			echo "<input type=hidden name=saveto value=".$_REQUEST[saveto].">\n";
+			echo "<input type=hidden name=savedir value=".urlencode($_REQUEST[savedir]).">\n";
+			echo "<input type=hidden name=ref value=".urlencode(base64_encode($Referer)).">\n";
+			echo "<input type=hidden name=orlink value=".urlencode(base64_encode($LINK)).">\n";
+			echo "<input type=hidden name=link value=".urlencode(base64_encode($LINK)).">\n";
+			echo ($_REQUEST["add_comment"] ? "<input type=hidden name=add_comment value=on>\n<input type=hidden name=comment value=".urlencode($_REQUEST[comment]).">\n" : "");
+			echo "<input type=hidden name=domail value=".$_GET[domail].">\n";
+			echo "<input type=hidden name=email value=".$_GET[email].">\n";
+			echo "<input type=hidden name=useproxy value=".$_GET[useproxy].">\n";
+			echo "<input type=hidden name=proxy value=".$_GET[proxy].">\n";
+			echo "<input type=hidden name=split value=".$_GET[split].">\n";
+			echo "<input type=hidden name=method value=".$_GET[method].">\n";
+			echo "<input type=hidden name=partSize value=".$_GET[partSize].">\n";
+			echo "<input type=hidden name=showdirect value=".($_GET["showdirect"] == "on" ? "on" : "").">\n";
+			echo ($pauth ? "<input type=hidden name=pauth value=".urlencode($pauth).">\n" : "");
+
+			echo "<h3>Please enter <img align=middle src=\"$newlink\"> here: <input type=text name=accesscode size=4 maxlength=4>  <input type=\"submit\" name=\"actionstring\" value=\"Download file\"></h3>\n";
+			echo "</form>\n";
+			exit;
+		}
+	
+	is_present($page,"The file you are trying to access is temporarily unavailable");
+
+	$findvar = cut_str($page, "Please wait <b>'+","+'</b> secon");
+	$countDownLeft = $findvar . "=";
+	$countDown = trim(cut_str($page, $countDownLeft, ";"));
+	$countDown = $countDown ? $countDown : 50;
+	
+	$html_code=cut_str($page,"if($findvar == 0)","if($findvar > 0)");
+	
+	$html_code=cut_str($html_code,"var ","}");
+	
+	if (!$html_code)
+		{
+			html_error('Error retrive link info. Retry later<p></center>'.$page);
+		}
+		
+	$html_code="var ".$html_code;
+	
+	$html_code=str_replace('document.getElementById("download_html").innerHTML = '."'<a href=\"","var newlink='",$html_code);
+	$html_code=str_replace('document.getElementById("downloadhtml").innerHTML = '."'<a href=\"","var newlink='",$html_code);
+	$html_code=str_replace('document.getElementById("dlbutton").innerHTML = \'<a href="',"var newlink='",$html_code);
+	
+	$tmp_=explode('"',$html_code);
+	$html_code=$tmp_[0]."';";
+	
+	echo "<script language=javascript>\n";
+	echo trim($html_code);
+	echo "\n</script>\n";
+
+	insert_timer($countDown, "Waiting link timelock.","",true);
+	
+	echo "<script src=base64.js></script>\n";
+	echo "<script>\n";
+	if ($_GET["showdirect"] == "on")
+		{
+			echo "document.write('<center><b>'+newlink+'</b></center>')\n";
+		}
+			else
+		{
+			echo "var newlnk='$PHP_SELF?command=request&newagent=".urlencode($agent)."&ref=".urlencode($Referer)."&orlink=".urlencode($_GET["orlink"]).addmailtolink_2()."&proxy=".($_GET["useproxy"] ? $_GET["proxy"] : "")."&saveto=".$_GET["saveto"]."&savedir=".urlencode($_GET["savedir"])."&link='+newlink+'".($_REQUEST["add_comment"] ? "&add_comment=on&comment=".urlencode($_REQUEST[comment]) : "").($_GET["pauth"] ? "&pauth=".$_GET["pauth"]."&=proxyuser".$_GET["proxyuser"]."&=proxypass".$_GET["proxypass"] : "")."'\n";
+			echo "document.location=newlnk;\n";
+		}
+	echo "</script>\n";
+?>

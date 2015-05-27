@@ -1,0 +1,32 @@
+<?php
+	$disable_timer=true;
+
+	$page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), 0, 0, 0, 0, $_GET["proxy"],$pauth);
+	is_page($page);
+	
+	is_present($page,'File has been removed or does not exist');
+	is_notpresent($page,'Download file:','Invalid file ID or Name');
+
+	$cookies=GetCookies($page);
+	
+	$countDown=trim(cut_str($page,'seconds=',';'));
+	$countDown = $countDown || ($countDown === '0' )? $countDown : 30;
+	insert_timer($countDown, "Waiting link timelock.","",true);
+	
+	$sid_page=trim(cut_str($page,'http://'.$Url["host"].'/download.php?session=',"\\'"));
+	
+	
+	if (!$sid_page) html_error('This service change protect method');
+	
+	
+	$Href='http://'.$Url["host"].'/download.php?session='.$sid_page;
+
+	if (!$Href) { html_error('Error get direct link'); }
+	
+	$Href=$link_start.$Href;
+
+	$Url = parse_url($Href);
+	$FileName = !$FileName ? basename($Url["path"]) : $FileName;
+	
+	insert_location("$PHP_SELF?command=download&FileName=".urlencode(base64_encode($FileName))."&cookie=".urlencode(base64_encode(serialize($cookies)))."&host=".urlencode(base64_encode($Url[host]))."&path=".urlencode(base64_encode($Url[path].($Url["query"] ? "?".$Url["query"] : "")))."&referer=".urlencode(base64_encode($Referer))."&email=".($_GET["domail"] ? $_GET["email"] : "")."&partSize=".($_GET[split] ? $_GET[partSize] : "")."&method=".$_GET[method]."&proxy=".($_GET["useproxy"] ? $_GET["proxy"] : "")."&saveto=".urlencode($_GET["savedir"])."&orlink=".urlencode(base64_encode($_GET["orlink"]))."&link=".urlencode(base64_encode($Href)).($_REQUEST["add_comment"] ? "&add_comment=on&comment=".urlencode($_REQUEST[comment]) : "").($pauth ? "&pauth=".urlencode($pauth) : ""),$Href,$_GET["showdirect"] == "on");
+?>

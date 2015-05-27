@@ -1,0 +1,8 @@
+<?php
+	$firstpage_plugin["fileshare.in.ua"]="fileshare.in.ua.$first_plug_ext";
+
+	$supported_service[]="fileshare.in.ua";
+
+	$subdomain_plugin[]="fileshare.in.ua";
+#	$subreplace_plugin["fileshare.in.ua"]=true;
+?>

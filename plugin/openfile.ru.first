@@ -1,0 +1,39 @@
+<?php
+		# Доделал ValdikSS	
+	$page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), 0, 0, 0, 0, $_GET["proxy"],$pauth);
+	is_page($page);
+
+	$sess=cut_str($page,"PHPSESSID=",";");
+	$cookies="PHPSESSID=$sess";
+	$fileid=$Url["path"];
+
+	$access_image_url="http://openfile.ru/secret.php";
+
+	$newlink = "$PHP_SELF?command=image&link=".urlencode(base64_encode($access_image_url))."&cookie=".urlencode(base64_encode(serialize($cookies))).($_GET["useproxy"] == "on" ? "&useproxy=on&proxy=".$_GET["proxy"] : "").($pauth ? "&pauth=".urlencode($pauth) : "");
+	
+	echo "<form action=$PHP_SELF method=post>\n";
+	echo "<input type=hidden name=command value=second>\n";
+	echo "<input type=hidden name=services value='openfile.ru'>\n";
+	echo "<input type=hidden name=fileid value='$fileid'>\n";
+	echo "<input type=hidden name=session_id value='$sess'>\n";
+
+	echo "<input type=hidden name=saveto value=".$_REQUEST[saveto].">\n";
+	echo "<input type=hidden name=savedir value=".urlencode($_REQUEST[savedir]).">\n";
+	echo "<input type=hidden name=ref value=".urlencode(base64_encode($Referer)).">\n";
+	echo "<input type=hidden name=orlink value=".urlencode(base64_encode($OR_LINK ? $OR_LINK : $LINK)).">\n";
+	
+	echo "<input type=hidden name=link value=".urlencode(base64_encode($LINK)).">\n";
+	echo ($_REQUEST["add_comment"] ? "<input type=hidden name=add_comment value=on>\n<input type=hidden name=comment value=".urlencode($_REQUEST[comment]).">\n" : "");
+	echo "<input type=hidden name=domail value=".$_GET[domail].">\n";
+	echo "<input type=hidden name=email value=".$_GET[email].">\n";
+	echo "<input type=hidden name=useproxy value=".$_GET[useproxy].">\n";
+	echo "<input type=hidden name=proxy value=".$_GET[proxy].">\n";
+	echo "<input type=hidden name=split value=".$_GET[split].">\n";
+	echo "<input type=hidden name=method value=".$_GET[method].">\n";
+	echo "<input type=hidden name=partSize value=".$_GET[partSize].">\n";
+	echo "<input type=hidden name=showdirect value=".($_GET["showdirect"] == "on" ? "on" : "").">\n";
+	echo ($pauth ? "<input type=hidden name=pauth value=".urlencode($pauth).">\n" : "");
+
+	echo "<h3>Please enter <img align=middle src=\"$newlink\"> here: <input type=text name=accesscode size=4 maxlength=4>  <input type=\"submit\" name=\"actionstring\" value=\"Download file\"></h3>\n";
+	echo "</form>\n";
+?>

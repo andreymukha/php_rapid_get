@@ -1,0 +1,9 @@
+<?php
+	$firstpage_plugin["www.mediafire.com"]="www.mediafire.com.$first_plug_ext";
+	$firstpage_plugin["mediafire.com"]="www.mediafire.com.$first_plug_ext";
+	$supported_service[]="www.mediafire.com";
+	$supported_service[]="mediafire.com";
+//Большое спасибо Mike Samokhvalov за разработку методики и помощь в создании плагина.
+//Основано на исходном коде Mike Samokhvalov
+//Плагин подготовил Triton4ik
+?>

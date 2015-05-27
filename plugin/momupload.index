@@ -1,0 +1,5 @@
+<?php
+	$secondpage_plugin["momupload.com"]="momupload.$second_plug_ext";
+	$firstpage_plugin["momupload.com"]="momupload.$first_plug_ext";
+	$supported_service[]="momupload.com";
+?>

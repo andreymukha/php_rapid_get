@@ -1,0 +1,35 @@
+<?php
+	$fid=basename($Url["path"]);
+	
+	$firstpage="http://www.savefile.com/files/$fid";
+	$Url=parse_url($firstpage);
+	$Referer=$LINK;
+	
+	$page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), 0, 0, 0, 0, $_GET["proxy"],$pauth);
+	is_page($page);
+	
+	is_present($page,'File ID is not valid');
+	is_notpresent($page,'<a href="/download/','Error retrive second page');
+	
+	$countDown=5;
+	insert_timer($countDown, "Waiting link timelock.","",true);
+	
+	$cookies=GetCookies($page);
+	
+	$finalpage='http://www.savefile.com'.'/download/'.trim(cut_str($page,'<a href="/download/','">'));
+	
+	$Url = parse_url($finalpage);	
+	
+	$page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), $cookies, 0, 0, 0, $_GET["proxy"],$pauth);
+	is_page($page);
+	
+	is_notpresent($page,'Download file now',"Error retrive direct Link");
+
+	$tmp=trim(cut_str($page,'our download should begin shortly','Download file now'));
+	$Href=trim(cut_str($tmp,'<a href="','">'));
+
+	$Url = parse_url($Href);
+	$FileName = !$FileName ? basename($Url["path"]) : "attachment";
+	
+	insert_location("$PHP_SELF?command=download&FileName=".urlencode(base64_encode($FileName))."&host=".urlencode(base64_encode($Url[host]))."&path=".urlencode(base64_encode($Url[path].($Url["query"] ? "?".$Url["query"] : "")))."&referer=".urlencode(base64_encode($Referer)).addmailtolink_2()."&proxy=".($_GET["useproxy"] ? $_GET["proxy"] : "")."&saveto=".urlencode($_GET["savedir"])."&orlink=".urlencode(base64_encode($_GET["orlink"]))."&link=".urlencode(base64_encode($Href)).($_REQUEST["add_comment"] ? "&add_comment=on&comment=".urlencode($_REQUEST[comment]) : "").($pauth ? "&pauth=".urlencode($pauth) : ""),$Href,$_GET["showdirect"] == "on");
+?>

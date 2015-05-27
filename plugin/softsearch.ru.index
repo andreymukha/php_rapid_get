@@ -1,0 +1,22 @@
+<?php
+	$firstpage_plugin["softsearch.ru"]="softsearch.ru.$first_plug_ext";
+	$firstpage_plugin["www.softsearch.ru"]="softsearch.ru.$first_plug_ext";
+	$firstpage_plugin["skan.ru"]="softsearch.ru.$first_plug_ext";
+	$firstpage_plugin["www.skan.ru"]="softsearch.ru.$first_plug_ext";
+	$firstpage_plugin["downloads.ru"]="softsearch.ru.$first_plug_ext";
+	$firstpage_plugin["www.downloads.ru"]="softsearch.ru.$first_plug_ext";
+	$firstpage_plugin["freesoft.ru"]="softsearch.ru.$first_plug_ext";
+	$firstpage_plugin["www.freesoft.ru"]="softsearch.ru.$first_plug_ext";
+	$firstpage_plugin["softportal.com"]="softsearch.ru.$first_plug_ext";
+	$firstpage_plugin["www.softportal.com"]="softsearch.ru.$first_plug_ext";
+	$supported_service[]="softsearch.ru";
+	$supported_service[]="www.softsearch.ru";
+	$supported_service[]="skan.ru";
+	$supported_service[]="www.skan.ru";
+	$supported_service[]="downloads.ru";
+	$supported_service[]="www.downloads.ru";
+	$supported_service[]="freesoft.ru";
+	$supported_service[]="www.freesoft.ru";
+	$supported_service[]="softportal.com";
+	$supported_service[]="www.softportal.com"
+?>

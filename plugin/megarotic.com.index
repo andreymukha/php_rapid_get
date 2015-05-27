@@ -1,0 +1,10 @@
+<?php
+	$secondpage_plugin["megarotic.com"]="megarotic.com.$second_plug_ext";
+	$secondpage_plugin["www.megarotic.com"]="megarotic.com.$second_plug_ext";
+	
+	$firstpage_plugin["megarotic.com"]="megarotic.com.$first_plug_ext";
+	$firstpage_plugin["www.megarotic.com"]="megarotic.com.$first_plug_ext";
+
+	$supported_service[]="megarotic.com";
+	$supported_service[]="www.megarotic.com";
+?>

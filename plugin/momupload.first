@@ -1,0 +1,43 @@
+<?php
+	$disable_timer=true;
+	$cookies[]='lang=en; path=/';
+
+	$page = geturl($Url["host"], $Url["port"] ? $Url["port"] : 80, $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), 0, $cookies, 0, 0, $_GET["proxy"],$pauth);
+	is_page($page);
+	
+	is_present($page,'No such file or document exists.');
+	
+	$cookies=GetCookies($page);
+	$cookies[]='lang=en; path=/';
+	
+	$countDown=trim(cut_str($page,"var TotTime = ",";"));
+	insert_timer($countDown, "Waiting link timelock.","",true);
+
+	$PHP_sess=trim(cut_str($page,'PHPSESSID=',';'));
+	$access_image_url="http://momupload.com/keystring/?PHPSESSID=".$PHP_sess;
+	$newlink="$PHP_SELF?command=image&link=".urlencode(base64_encode($access_image_url))."&ref=".urlencode(base64_encode($LINK)).($_GET["useproxy"] == "on" ? "&useproxy=on&proxy=".$_GET["proxy"] : "").($pauth ? "&pauth=".urlencode($pauth) : "");
+
+	echo "<form action=$PHP_SELF method=post>\n";
+	echo "<input type=hidden name=command value=second>\n";
+	echo "<input type=hidden name=services value='momupload.com'>\n";
+	echo "<input type=hidden name=formurl value='".urlencode(base64_encode('http://momupload.com/link_generator.php?id='.cut_str($page,'"/link_generator.php?id=','"')))."'>\n";		
+	echo "<input type=hidden name=cookie value='".urlencode(base64_encode(serialize($cookies)))."'>\n";
+	echo "<input type=hidden name=saveto value=".$_REQUEST[saveto].">\n";
+	echo "<input type=hidden name=savedir value=".urlencode($_REQUEST[savedir]).">\n";
+	echo "<input type=hidden name=ref value=".urlencode(base64_encode($LINK)).">\n";
+	echo "<input type=hidden name=orlink value=".urlencode(base64_encode($LINK)).">\n";
+	echo "<input type=hidden name=link value=".urlencode(base64_encode($LINK)).">\n";
+	echo ($_REQUEST["add_comment"] ? "<input type=hidden name=add_comment value=on>\n<input type=hidden name=comment value=".urlencode($_REQUEST[comment]).">\n" : "");
+	echo "<input type=hidden name=domail value=".$_GET[domail].">\n";
+	echo "<input type=hidden name=email value=".$_GET[email].">\n";
+	echo "<input type=hidden name=useproxy value=".$_GET[useproxy].">\n";
+	echo "<input type=hidden name=proxy value=".$_GET[proxy].">\n";
+	echo "<input type=hidden name=split value=".$_GET[split].">\n";
+	echo "<input type=hidden name=method value=".$_GET[method].">\n";
+	echo "<input type=hidden name=partSize value=".$_GET[partSize].">\n";
+	echo "<input type=hidden name=showdirect value=".($_GET["showdirect"] == "on" ? "on" : "").">\n";
+	echo ($pauth ? "<input type=hidden name=pauth value=".urlencode($pauth).">\n" : "");
+
+	echo "<h3>Please enter <img align=middle src=\"$newlink\"> here: <input type=text name=accesscode size=6 maxlength=9>  <input type=submit value=\"Download file\"></h3>\n";
+	echo "</form>\n";
+?>

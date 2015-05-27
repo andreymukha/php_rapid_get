@@ -1,0 +1,6 @@
+<?php
+	$firstpage_plugin["uploaded.to"]="uploaded.to.$first_plug_ext";
+	$firstpage_plugin["www.uploaded.to"]="uploaded.to.$first_plug_ext";
+	$supported_service[]="uploaded.to";
+	$supported_service[]="www.uploaded.to";
+?>

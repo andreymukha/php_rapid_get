@@ -1,0 +1,8 @@
+<?php
+	$firstpage_plugin["pirateshare.net"]="pirateshare.net.$first_plug_ext";
+	$supported_service[]="pirateshare.net";
+
+	$subdomain_plugin[]="pirateshare.net";
+#	$subreplace_plugin["pirateshare.net"]=true;
+
+?>

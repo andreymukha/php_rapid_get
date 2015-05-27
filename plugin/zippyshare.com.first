@@ -1,0 +1,16 @@
+<?php
+    $page = geturl($Url["host"], $Url["port"] ? $Url["port"] : 80, $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), 0, 0, 0, 0, $_GET["proxy"] ,$pauth);
+    is_page($page);
+    $timer = cut_str($page,"var t = ",";");
+    if ($timer) insert_timer($timer, "Getting ticket.","",true);
+    $cookie = GetCookies($page,true);
+    $cookies =  $cookie;
+    $Referer=$link;
+    $Href = urldecode(cut_str($page,"unescape('","'"));
+    if (!$Href) { html_error('Error retrive link');    }
+    $Url = parse_url($Href);
+    $FileName = !$FileName ? basename($Url["path"]) : $FileName;
+    insert_location("$PHP_SELF?command=download&FileName=".urlencode(base64_encode($FileName))."&cookie=".urlencode(base64_encode(serialize($cookies)))."&host=".urlencode(base64_encode($Url[host]))."&path=".urlencode(base64_encode($Url[path].($Url["query"] ? "?".$Url["query"] : "")))."&referer=".urlencode(base64_encode($Referer))."&email=".($_GET["domail"] ? $_GET["email"] : "")."&partSize=".($_GET[split] ? $_GET[partSize] : "")."&method=".$_GET[method].($_GET["useproxy"] == "on" ? "&useproxy=on&proxy=".$_GET["proxy"] : "")."&saveto=".urlencode($_GET["savedir"])."&orlink=".urlencode(base64_encode($_GET["orlink"]))."&link=".urlencode(base64_encode($Href)).($_REQUEST["add_comment"] ? "&add_comment=on&comment=".urlencode($_REQUEST[comment]) : "").($pauth ? "&pauth=".urlencode($pauth) : ""),$Href,$_GET["showdirect"] == "on");
+    #It is updated by triton4ik. 27.09.2007
+    #New system of protection of a server -referer
+?>

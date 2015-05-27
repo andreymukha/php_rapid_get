@@ -1,0 +1,4 @@
+<?php
+	$firstpage_plugin["www.egoshare.com"]="www.egoshare.com.$first_plug_ext";
+	$supported_service[]="www.egoshare.com";
+?>

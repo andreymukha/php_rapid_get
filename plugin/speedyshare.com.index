@@ -1,0 +1,7 @@
+<?php
+	$firstpage_plugin["speedyshare.com"]="speedyshare.com.$first_plug_ext";
+	$supported_service[]="speedyshare.com";
+
+	$subdomain_plugin[]="speedyshare.com";
+#	$subreplace_plugin["speedyshare.com"]=true;
+?>

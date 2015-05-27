@@ -1,0 +1,62 @@
+<?php
+	$page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), 0, 0, 0, 0, $_GET["proxy"],$pauth);
+	is_page($page);
+	
+	while (strstr($page,'Location'))
+		{
+			$newlink=trim(cut_str($page,"Location:","\n"));
+			$Url=parse_url($newlink);
+
+			$page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), 0, 0, 0, 0, $_GET["proxy"],$pauth);
+			is_page($page);
+		}	
+		
+	$var_c=trim(cut_str($page,'"Please wait " +','+ " seconds."'));
+	$countDown = trim(cut_str($page, "var $var_c = ", ";"));
+	insert_timer($countDown, "Waiting link timelock.","",true);
+
+	if (strstr($page,'Please enter <img src='))
+		{
+			$imagecode=cut_str($page,'Please enter <img src="','"');
+			$access_image_url=$Url["scheme"]."://".$Url["host"].$imagecode;
+			
+			$formlink=$Url["scheme"]."://".$Url["host"].'/dl.tu';
+			
+			$id=cut_str($page,'<input name="id" type="hidden" id="id" value="','">');
+			$s=cut_str($page,'<input name="s" type="hidden" id="s" value="','">');
+			$simage=cut_str($page,'<input name="simage" type="hidden" id="simage" value="','">');
+			$t=cut_str($page,'<input name="t" type="hidden" id="t" value="','">');
+			$pf=cut_str($page,'<input name="pf" type="hidden" id="pf" value="','">');
+			
+			$newlink=(($loadcaptha_old === true) || ((strpos($access_image_url,'https://') === 0) && ($ssl_image_direct === true))) ? $access_image_url : "$PHP_SELF?command=image&link=".urlencode(base64_encode($access_image_url))."&ref=".urlencode(base64_encode("http://uploading.com/")).($_GET["useproxy"] == "on" ? "&useproxy=on&proxy=".$_GET["proxy"] : "").($pauth ? "&pauth=".urlencode($pauth) : "");
+
+			echo "<form action=$PHP_SELF method=post>\n";
+			echo "<input type=hidden name=command value=second>\n";
+			echo "<input type=hidden name=services value='d.turboupload.com'>\n";
+			
+			echo "<input type=hidden name=fileid value='$id'>\n";
+			echo "<input type=hidden name=second_s value='$s'>\n";
+			echo "<input type=hidden name=second_simage value='$simage'>\n";
+			echo "<input type=hidden name=second_t value='$t'>\n";
+			echo "<input type=hidden name=second_pf value='$pf'>\n";
+
+			echo "<input type=hidden name=saveto value=".$_REQUEST[saveto].">\n";
+			echo "<input type=hidden name=savedir value=".urlencode($_REQUEST[savedir]).">\n";
+			echo "<input type=hidden name=ref value=".urlencode(base64_encode($Referer)).">\n";
+			echo "<input type=hidden name=orlink value=".urlencode(base64_encode($LINK)).">\n";
+			echo "<input type=hidden name=link value=".urlencode(base64_encode($formlink)).">\n";
+			echo ($_REQUEST["add_comment"] ? "<input type=hidden name=add_comment value=on>\n<input type=hidden name=comment value=".urlencode($_REQUEST[comment]).">\n" : "");
+			echo "<input type=hidden name=domail value=".$_GET[domail].">\n";
+			echo "<input type=hidden name=email value=".$_GET[email].">\n";
+			echo "<input type=hidden name=useproxy value=".$_GET[useproxy].">\n";
+			echo "<input type=hidden name=proxy value=".$_GET[proxy].">\n";
+			echo "<input type=hidden name=split value=".$_GET[split].">\n";
+			echo "<input type=hidden name=method value=".$_GET[method].">\n";
+			echo "<input type=hidden name=partSize value=".$_GET[partSize].">\n";
+			echo "<input type=hidden name=showdirect value=".($_GET["showdirect"] == "on" ? "on" : "").">\n";
+			echo ($pauth ? "<input type=hidden name=pauth value=".urlencode($pauth).">\n" : "");
+
+			echo "<h3>Please enter <img align=middle src=\"$newlink\"> here: <input type=text name=accesscode size=6 maxlength=6>  <input type=\"submit\" name=\"actionstring\" value=\"Download file\"></h3>\n";
+			echo "</form>\n";
+		}
+?>

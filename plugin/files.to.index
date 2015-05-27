@@ -1,0 +1,4 @@
+<?php
+	$firstpage_plugin["files.to"]="files.to.$first_plug_ext";
+	$supported_service[]="files.to";
+?>

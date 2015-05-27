@@ -1,0 +1,13 @@
+<?php
+	$secondpage_plugin["rapidshare"]="rapidshare.$second_plug_ext";
+	$secondpage_plugin["rapidshare.com"]="rapidshare.$second_plug_ext";
+	$secondpage_plugin["rapidshare.de"]="rapidshare.$second_plug_ext";
+
+	$firstpage_plugin["rapidshare.de"]="rapidshare.de.$first_plug_ext";
+	$supported_service[]="rapidshare.de";
+
+
+	$rapidlogin=false;				#false - free режим работы или задание логина в форме
+	$rapidpass=false;				#false - free режим работы или задание пароля в форме
+
+?>

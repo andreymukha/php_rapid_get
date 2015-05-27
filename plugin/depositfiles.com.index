@@ -1,0 +1,12 @@
+<?php
+	$secondpage_plugin["depositfiles.com"]="depositfiles.com.$second_plug_ext";
+	$firstpage_plugin["depositfiles.com"]="depositfiles.com.$first_plug_ext";
+	$supported_service[]="depositfiles.com";
+
+    ##########################################
+    # тут можно ввести логин/пасс по умлочанию
+    $deposit_login = false; // например "test"
+    $deposit_pass = false; // например "test"
+    ##########################################
+
+?>

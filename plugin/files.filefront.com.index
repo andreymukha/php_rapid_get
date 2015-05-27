@@ -1,0 +1,5 @@
+<?php
+	$firstpage_plugin["files.filefront.com"]="files.filefront.com.$first_plug_ext";
+	$supported_service[]="files.filefront.com";
+    $supported_service[]="filefront.com";  
+?>

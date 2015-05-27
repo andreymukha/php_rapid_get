@@ -1,0 +1,5 @@
+<?php
+	$firstpage_plugin["openfile.ru"]="openfile.ru.$first_plug_ext";
+	$secondpage_plugin["openfile.ru"]="openfile.ru.$second_plug_ext";
+	$supported_service[]="openfile.ru";
+?>

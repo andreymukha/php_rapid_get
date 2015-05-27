@@ -1,0 +1,4 @@
+<?php
+	$firstpage_plugin["www.savefile.com"]="www.savefile.com.$first_plug_ext";
+	$supported_service[]="www.savefile.com";
+?>

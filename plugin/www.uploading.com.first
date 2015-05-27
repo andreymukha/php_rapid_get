@@ -1,0 +1,81 @@
+<?php
+	$cookies[]="setlang=en; expires=Sun, 01 Jul 2020 00:00:00 GMT; path=/; domain=.uploading.com";
+	
+	$page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), 0, $cookies, 0, 0, $_GET["proxy"],$pauth);
+
+	is_page($page);
+	is_present($page,'Sorry, but you seem to have bumped into an invalid link');
+	is_present($page,'All download slots assigned to your country','All download slots assigned to your country are in use');
+	
+	if (strstr($page,'linkblock'))
+		{
+		
+			
+			$tmp=strstr($page,'linkblock');
+			$link=urldecode(trim(cut_str($tmp,"document.write(unescape('","'))")));
+			
+			$Href=trim(cut_str($link,'<a href="','"'));
+			if (!$Href) { html_error('Error get direct link'); }
+	
+			$Url = parse_url($Href);
+			$FileName = !$FileName ? basename($Url["path"]) : $FileName;
+			
+			$Referer="http://www.uploading.com";
+			
+			insert_location("$PHP_SELF?command=download&FileName=".urlencode(base64_encode($FileName))."&cookie=".urlencode(base64_encode(serialize($cookies)))."&host=".urlencode(base64_encode($Url[host]))."&path=".urlencode(base64_encode($Url[path].($Url["query"] ? "?".$Url["query"] : "")))."&referer=".urlencode(base64_encode($Referer)).addmailtolink_2().($_GET["useproxy"] == "on" ? "&useproxy=on&proxy=".$_GET["proxy"] : "")."&saveto=".urlencode($_GET["savedir"])."&orlink=".urlencode(base64_encode($_GET["orlink"]))."&link=".urlencode(base64_encode($Href)).($_REQUEST["add_comment"] ? "&add_comment=on&comment=".urlencode($_REQUEST[comment]) : "").($pauth ? "&pauth=".urlencode($pauth) : ""),$Href,$_GET["showdirect"] == "on");
+			exit;
+		}
+	
+	if (!strstr($page,'id="codeblock"'))
+		{
+			is_notpresent($page,'name="cs_data" value="','Error decode first page. Service change protect method'.$page);
+	
+			$cs_data=cut_str($page,'name="cs_data" value="','"');
+	
+			$post["cs_data"]=$cs_data;
+			$post["saff"]="0";
+			$post["s"]="0";
+			$post["nextstep"]="1";
+			$post["submit"]="Free";
+			
+			$newref="http://www.uploading.com/en/files/".trim(cut_str($page,'<a href="http://www.uploading.com/en/files/','"'));
+			$Url=parse_url($newref);
+			$page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), 0, $cookies, $post, 0, $_GET["proxy"],$pauth);
+	
+			is_present($page,'All download slots assigned to your country','All download slots assigned to your country are in use');
+		}
+	
+	$newref="http://www.uploading.com/en/files/".trim(cut_str($page,'<a href="http://www.uploading.com/en/files/','"'));
+	$codeblock=cut_str($page,'<div id="codeblock"','</div>');
+	$codeblock=urldecode(cut_str($codeblock,"une"."scape('","'))"));
+	
+	$cs_data=cut_str($codeblock,'name="cs_data" value="','"');
+	
+	$access_image_url=cut_str($codeblock,'<img border="0" src="','"');
+	$newlink=(($loadcaptha_old === true) || ((strpos($access_image_url,'https://') === 0) && ($ssl_image_direct === true))) ? $access_image_url : "$PHP_SELF?command=image&link=".urlencode(base64_encode($access_image_url))."&ref=".urlencode(base64_encode("http://uploading.com/")).($_GET["useproxy"] == "on" ? "&useproxy=on&proxy=".$_GET["proxy"] : "").($pauth ? "&pauth=".urlencode($pauth) : "");
+
+	echo "<form action=$PHP_SELF method=post>\n";
+	echo "<input type=hidden name=command value=second>\n";
+	echo "<input type=hidden name=services value='www.uploading.com'>\n";
+	
+	echo "<input type=hidden name=cs_data value='".urlencode($cs_data)."'>\n";
+
+	echo "<input type=hidden name=saveto value=".$_REQUEST[saveto].">\n";
+	echo "<input type=hidden name=savedir value=".urlencode($_REQUEST[savedir]).">\n";
+	echo "<input type=hidden name=ref value=".urlencode(base64_encode($Referer)).">\n";
+	echo "<input type=hidden name=orlink value=".urlencode(base64_encode($LINK)).">\n";
+	echo "<input type=hidden name=link value=".urlencode(base64_encode($newref)).">\n";
+	echo ($_REQUEST["add_comment"] ? "<input type=hidden name=add_comment value=on>\n<input type=hidden name=comment value=".urlencode($_REQUEST[comment]).">\n" : "");
+	echo "<input type=hidden name=domail value=".$_GET[domail].">\n";
+	echo "<input type=hidden name=email value=".$_GET[email].">\n";
+	echo "<input type=hidden name=useproxy value=".$_GET[useproxy].">\n";
+	echo "<input type=hidden name=proxy value=".$_GET[proxy].">\n";
+	echo "<input type=hidden name=split value=".$_GET[split].">\n";
+	echo "<input type=hidden name=method value=".$_GET[method].">\n";
+	echo "<input type=hidden name=partSize value=".$_GET[partSize].">\n";
+	echo "<input type=hidden name=showdirect value=".($_GET["showdirect"] == "on" ? "on" : "").">\n";
+	echo ($pauth ? "<input type=hidden name=pauth value=".urlencode($pauth).">\n" : "");
+
+	echo "<h3>Please enter <img align=middle src=\"$newlink\"> here: <input type=text name=accesscode size=5>  <input type=submit value=\"Download file\"></h3>\n";
+	echo "</form>\n";
+?>

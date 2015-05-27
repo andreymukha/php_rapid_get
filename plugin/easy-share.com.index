@@ -1,0 +1,9 @@
+<?php
+	for ($i=10; $i<=20; $i++)
+		{
+			$firstpage_plugin["w".$i.".easy-share.com"]="easy-share.com.$first_plug_ext";
+			$secondpage_plugin["w".$i.".easy-share.com"]="easy-share.com.$second_plug_ext";
+			$supported_service[]="w".$i.".easy-share.com";
+		}
+		# Автор плагина Director Of Zoo (aka 'kamyshew') 2007. Only for Rapidget. No Rapidkill!!!.		
+?>

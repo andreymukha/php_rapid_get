@@ -1,0 +1,61 @@
+<?php
+	$form_url=base64_decode(urldecode($_REQUEST["formurl"]))."&".$_REQUEST[accesscode];
+	$access_image_url=base64_decode(urldecode($_REQUEST["access_image_url"]));
+
+	$Url=parse_url($form_url);
+
+	parse_str($Url["query"],$post);
+
+	$post["f"]=cut_str($form_url,'f=','&');
+	$post["h"]=cut_str($form_url,'h=','&');
+	$post["b"]=cut_str($form_url,'b=','&');
+
+	$post["captcha"]=$_REQUEST[accesscode];
+
+    echo $form_url."\n";
+	$page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), $LINK, 0, $post, 0, $_GET["proxy"],$pauth);
+	is_page($page);
+                    echo $page;
+	if (strstr($page,'Sorry, the verification code you entered was incorrect'))
+		{
+			echo "<center><font color=red>Incorrect is entered a code of the access. Retry</font></center><p>\n";
+
+			echo "<form action=$PHP_SELF method=post>\n";
+			echo "<input type=hidden name=command value=second>\n";
+			echo "<input type=hidden name=services value='filefactory.com'>\n";
+			echo "<input type=hidden name=access_image_url value='".urlencode(base64_encode($access_image_url))."'>\n";
+			echo "<input type=hidden name=formurl value='".urlencode(base64_encode($form_url))."'>\n";
+
+			echo "<input type=hidden name=saveto value=".$_REQUEST[saveto].">\n";
+			echo "<input type=hidden name=savedir value=".urlencode($_REQUEST[savedir]).">\n";
+			echo "<input type=hidden name=ref value=".urlencode(base64_encode($Referer)).">\n";
+			echo "<input type=hidden name=orlink value=".urlencode(base64_encode($OR_LINK ? $OR_LINK : $LINK)).">\n";
+
+			echo "<input type=hidden name=link value=".urlencode(base64_encode($LINK)).">\n";
+			echo ($_REQUEST["add_comment"] ? "<input type=hidden name=add_comment value=on>\n<input type=hidden name=comment value=".urlencode($_REQUEST[comment]).">\n" : "");
+			echo "<input type=hidden name=domail value=".$_GET[domail].">\n";
+			echo "<input type=hidden name=email value=".$_GET[email].">\n";
+			echo "<input type=hidden name=useproxy value=".$_GET[useproxy].">\n";
+			echo "<input type=hidden name=proxy value=".$_GET[proxy].">\n";
+			echo "<input type=hidden name=split value=".$_GET[split].">\n";
+			echo "<input type=hidden name=method value=".$_GET[method].">\n";
+			echo "<input type=hidden name=partSize value=".$_GET[partSize].">\n";
+			echo "<input type=hidden name=showdirect value=".($_GET["showdirect"] == "on" ? "on" : "").">\n";
+			echo ($pauth ? "<input type=hidden name=pauth value=".urlencode($pauth).">\n" : "");
+
+			echo "<h3>Please enter <img alt='".$access_image_url."' align=middle src=\"$access_image_url\"> here: <input type=text name=accesscode size=6 maxlength=6>  <input type=\"submit\" name=\"actionstring\" value=\"Download file\"></h3>\n";
+			echo "</form>\n";
+
+			exit;
+		}
+
+	//$fl_array = array_pop(preg_grep('/Click here to begin your download <\/a>/', explode("\n",$page)));
+
+	$Href=cut_str($page,'target="_top" href="','"');
+
+	if (!$Href) { html_error('Error get direct link'); }
+	$Url = parse_url($Href);
+	$FileName = !$FileName ? basename($Url["path"]) : $FileName;
+    echo $Href;
+	insert_location("$PHP_SELF?command=download&FileName=".urlencode(base64_encode($FileName))."&host=".urlencode(base64_encode($Url[host]))."&path=".urlencode(base64_encode($Url[path].($Url["query"] ? "?".$Url["query"] : "")))."&referer=".urlencode(base64_encode($Referer)).addmailtolink_2()."&proxy=".($_GET["useproxy"] ? $_GET["proxy"] : "")."&saveto=".urlencode($_GET["savedir"])."&orlink=".urlencode(base64_encode($_GET["orlink"]))."&link=".urlencode(base64_encode($Href)).($_REQUEST["add_comment"] ? "&add_comment=on&comment=".urlencode($_REQUEST[comment]) : "").($pauth ? "&pauth=".urlencode($pauth) : ""),$Href,$_GET["showdirect"] == "on");
+?>

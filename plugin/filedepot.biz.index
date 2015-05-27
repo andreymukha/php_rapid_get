@@ -1,0 +1,7 @@
+<?php
+	$firstpage_plugin["filedepot.biz"]="filedepot.biz.$first_plug_ext";
+	$supported_service[]="filedepot.biz";
+
+	$subdomain_plugin[]="filedepot.biz";
+#	$subreplace_plugin["filedepot.biz"]=true;
+?>

@@ -1,0 +1,6 @@
+<?php
+	$firstpage_plugin["storeandserve.com"]="storeandserve.com.$first_plug_ext";
+	$firstpage_plugin["www.storeandserve.com"]="storeandserve.com.$first_plug_ext";
+	$supported_service[]="storeandserve.com";
+	$supported_service[]="www.storeandserve.com";
+?>

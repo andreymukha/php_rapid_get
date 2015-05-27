@@ -1,0 +1,52 @@
+<?php
+	$cook[]='c_language=ru; expires=Fri, 23-Mar-2015 13:42:07 GMT; path=/';
+
+	$page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), 0, $cook, 0, 0, $_GET["proxy"],$pauth);
+	is_page($page);
+	
+	is_notpresent($page,'id="codeChecker"','Invalid file ID or Deleted');
+	
+	$cookies=GetCookies($page);
+	
+	$fid1=basename($Url["path"]);
+	$fid2=trim(cut_str($page,'name="fid" value="','"'));
+	
+	if (!$fid1 || ($fid1 != $fid2)) html_error('This service change protect method');
+	
+	$access_image_cod=trim(cut_str($page,'src="/secret/','"'));
+	if (!$access_image_cod) html_error('This service change protect method. Error get image URL');
+	$access_image_url=$Url["scheme"]."://".$Url["host"].':'.defport($Url).'/secret/'.$access_image_cod.'?temp='.time();
+	$newlink=($loadcaptha_old === true) ? $access_image_url : "$PHP_SELF?command=image&link=".urlencode(base64_encode($access_image_url))."&ref=".urlencode(base64_encode("http://uploading.com/")).($_GET["useproxy"] == "on" ? "&useproxy=on&proxy=".$_GET["proxy"] : "").($pauth ? "&pauth=".urlencode($pauth) : "");
+	
+	echo "<form action=$PHP_SELF method=post>\n";
+	echo "<input type=hidden name=command value=second>\n";
+	echo "<input type=hidden name=services value='www.upload.com.ua'>\n";
+	echo "<input type=hidden name=cupname value='hum_value'>\n";
+	echo "<input type=hidden name=fid value='".$fid1."'>\n";
+
+	echo "<input type=hidden name=formurl value='".urlencode(base64_encode($Url["scheme"]."://".$Url["host"].':'.defport($Url).'/getlink/'))."'>\n";
+	echo "<input type=hidden name=access_image_url value='".urlencode(base64_encode($newlink))."'>\n";
+	
+	$cookies=base64_encode(serialize(GetCookies($page)));
+	echo "<input type=hidden name=cookie value='".urlencode($cookies)."'>\n";
+	
+	echo "<input type=hidden name=saveto value=".$_REQUEST[saveto].">\n";
+	echo "<input type=hidden name=savedir value=".urlencode($_REQUEST[savedir]).">\n";
+	echo "<input type=hidden name=ref value=".urlencode(base64_encode($LINK)).">\n";
+	echo "<input type=hidden name=orlink value=".urlencode(base64_encode($LINK)).">\n";
+	echo "<input type=hidden name=link value=".urlencode(base64_encode($LINK)).">\n";
+	echo ($_REQUEST["add_comment"] ? "<input type=hidden name=add_comment value=on>\n<input type=hidden name=comment value=".urlencode($_REQUEST[comment]).">\n" : "");
+	echo "<input type=hidden name=domail value=".$_GET[domail].">\n";
+	echo "<input type=hidden name=email value=".$_GET[email].">\n";
+	echo "<input type=hidden name=useproxy value=".$_GET[useproxy].">\n";
+	echo "<input type=hidden name=proxy value=".$_GET[proxy].">\n";
+	echo "<input type=hidden name=split value=".$_GET[split].">\n";
+	echo "<input type=hidden name=method value=".$_GET[method].">\n";
+	echo "<input type=hidden name=partSize value=".$_GET[partSize].">\n";
+	echo "<input type=hidden name=showdirect value=".($_GET["showdirect"] == "on" ? "on" : "").">\n";
+	echo ($pauth ? "<input type=hidden name=pauth value=".urlencode($pauth).">\n" : "");
+
+	echo "<h3>Please enter <img align=middle src=\"$newlink\"> here: <input type=text name=accesscode size=6 style=\"width:70px;\">  <input type=submit value=\"Download file\"></h3>\n";
+	echo "</form>\n";
+
+?>

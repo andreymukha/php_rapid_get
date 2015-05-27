@@ -1,0 +1,7 @@
+<?php
+	$firstpage_plugin["quicksharing.com"]="quicksharing.com.$first_plug_ext";
+	$supported_service[]="quicksharing.com";
+
+	$subdomain_plugin[]="quicksharing.com";
+#	$subreplace_plugin["quicksharing.com"]=true;
+?>

@@ -1,0 +1,4 @@
+<?php
+	$firstpage_plugin["www.rapidshare.ru"]="www.rapidshare.ru.$first_plug_ext";
+	$supported_service[]="www.rapidshare.ru";
+?>

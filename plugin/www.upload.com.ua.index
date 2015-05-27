@@ -1,0 +1,5 @@
+<?php
+	$secondpage_plugin["www.upload.com.ua"]="www.upload.com.ua.$second_plug_ext";
+	$firstpage_plugin["www.upload.com.ua"]="www.upload.com.ua.$first_plug_ext";
+	$supported_service[]="www.upload.com.ua";
+?>

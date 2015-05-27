@@ -1,0 +1,9 @@
+<?php
+	$secondpage_plugin["www.uploading.com"]="www.uploading.com.$second_plug_ext";
+	
+	$firstpage_plugin["uploading.com"]="www.uploading.com.$first_plug_ext";
+	$supported_service[]="uploading.com";
+
+	$subdomain_plugin[]="uploading.com";
+#	$subreplace_plugin["uploading.com"]=true;
+?>

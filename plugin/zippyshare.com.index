@@ -1,0 +1,6 @@
+<?php
+	$firstpage_plugin["zippyshare.com"]="zippyshare.com.$first_plug_ext";
+	$firstpage_plugin["www.zippyshare.com"]="zippyshare.com.$first_plug_ext";
+	$supported_service[]="zippyshare.com";
+	$supported_service[]="www.zippyshare.com";
+?>

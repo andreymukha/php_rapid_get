@@ -1,0 +1,7 @@
+<?php
+	$firstpage_plugin["zshare.net"]="zshare.net.$first_plug_ext";
+	$supported_service[]="zshare.net";
+	
+	$subdomain_plugin[]="zshare.net";
+#	$subreplace_plugin["zshare.net"]=true;
+?>

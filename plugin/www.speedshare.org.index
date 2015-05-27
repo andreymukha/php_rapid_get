@@ -1,0 +1,4 @@
+<?php
+	$firstpage_plugin["www.speedshare.org"]="www.speedshare.org.$first_plug_ext";
+	$supported_service[]="www.speedshare.org";
+?>

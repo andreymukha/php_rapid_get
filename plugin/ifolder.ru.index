@@ -1,0 +1,14 @@
+<?php
+	$secondpage_plugin["ifolder.ru"]="ifolder.ru.$second_plug_ext";
+	
+	$firstpage_plugin["filearchiv.ru"]="ifolder.ru.$first_plug_ext";
+	$firstpage_plugin["ifolder.ru"]="ifolder.ru.$first_plug_ext";
+	$firstpage_plugin["multifile.ru"]="ifolder.ru.$first_plug_ext";
+
+	$supported_service[]="ifolder.ru";
+	$supported_service[]="filearchiv.ru";
+	$supported_service[]="multifile.ru";
+
+	$subdomain_plugin[]="ifolder.ru";
+	$subreplace_plugin["ifolder.ru"]=true;
+?>

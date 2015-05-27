@@ -1,0 +1,6 @@
+<?php
+	$firstpage_plugin["adme.ru"]="www.adme.ru.$first_plug_ext";
+	$firstpage_plugin["www.adme.ru"]="www.adme.ru.$first_plug_ext";
+	$supported_service[]="adme.ru";
+	$supported_service[]="www.adme.ru";
+?>

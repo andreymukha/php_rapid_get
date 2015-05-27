@@ -1,0 +1,4 @@
+<?php
+	$firstpage_plugin["www.2shared.com"]="www.2shared.com.$first_plug_ext";
+	$supported_service[]="www.2shared.com";
+?>

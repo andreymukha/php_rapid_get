@@ -1,0 +1,6 @@
+<?php
+	$firstpage_plugin["www.upload2.net"]="www.upload2.net.$first_plug_ext";
+	$firstpage_plugin["upload2.net"]="www.upload2.net.$first_plug_ext";
+	$supported_service[]="www.upload2.net";
+	$supported_service[]="upload2.net";
+?>

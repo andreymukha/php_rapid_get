@@ -1,0 +1,10 @@
+<?php
+	$firstpage_plugin["oreys.com"]="oreys.com.$first_plug_ext";
+	$firstpage_plugin["www.oreys.com"]="oreys.com.$first_plug_ext";
+	$firstpage_plugin["filemashine.com"]="oreys.com.$first_plug_ext";
+	
+	$supported_service[]="oreys.com";
+	$supported_service[]="www.oreys.com";
+	$supported_service[]="filemashine.com";
+	
+?>

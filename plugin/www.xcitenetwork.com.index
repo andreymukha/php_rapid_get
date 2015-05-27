@@ -1,0 +1,4 @@
+<?php
+	$firstpage_plugin["www.xcitenetwork.com"]="www.xcitenetwork.com.$first_plug_ext";
+	$supported_service[]="www.xcitenetwork.com";
+?>

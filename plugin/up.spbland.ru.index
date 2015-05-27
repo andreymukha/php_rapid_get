@@ -1,0 +1,4 @@
+<?php
+	$firstpage_plugin["up.spbland.ru"]="up.spbland.ru.$first_plug_ext";
+	$supported_service[]="up.spbland.ru";
+?>

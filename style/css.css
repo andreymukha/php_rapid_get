@@ -1,0 +1,117 @@
+﻿A:link {COLOR: #000000; FONT-FAMILY: Tahoma, Arial, Verdana, Courier; FONT-WEIGHT: normal; FONT-SIZE: 12px; TEXT-DECORATION: underline; cursor: hand;}
+A:visited {COLOR: #000000; FONT-FAMILY: Tahoma, Arial, Verdana, Courier; FONT-WEIGHT: normal; FONT-SIZE: 12px; TEXT-DECORATION: underline; cursor: hand;}
+A:hover {COLOR: #333333; FONT-FAMILY: Tahoma, Arial, Verdana, Courier; FONT-WEIGHT: normal; FONT-SIZE: 12px; TEXT-DECORATION: underline; cursor: hand;}
+A:active {COLOR: #000000; FONT-FAMILY: Tahoma, Arial, Verdana, Courier; FONT-WEIGHT: normal; FONT-SIZE: 12px; TEXT-DECORATION: underline; cursor: hand;}
+
+.td,tr {
+	font-size: 13px;
+	font-family: tahoma;
+	color: #000000;
+	text-align: left;}
+	
+div {FONT-FAMILY: Tahoma, Arial, Verdana, Courier; COLOR: #000000; TEXT-ALIGN: center; FONT-WEIGHT: normal; FONT-SIZE: 12px;}
+h2 {FONT-FAMILY: Tahoma, Arial, Verdana, Courier; COLOR: #000000; TEXT-ALIGN: left; FONT-WEIGHT: normal; FONT-SIZE: 12px;}
+.style1 {
+	white-space: nowrap;
+	text-align: left;
+}
+body       {font-family: Tahoma; font-size: 11px; background-color: #999999;}
+tr         {font-family: Tahoma; font-size: 11px; line-height: 14.5px;}
+.in        {BORDER-RIGHT: #333333 1px solid; PADDING-RIGHT: 0px; BORDER-TOP: #333333 1px solid; PADDING-LEFT: 0px; FONT-SIZE: 8pt; PADDING-BOTTOM: 0px; BORDER-LEFT: #333333 1px solid; COLOR: #000000; PADDING-TOP: 0px; BORDER-BOTTOM: #333333 1px solid; FONT-FAMILY: Tahoma, Arial, Courier, Verdana; BACKGROUND-COLOR: #999999;}
+select     {font-family: Tahoma; font-size: 11px;}
+textarea   {BORDER-RIGHT: #333333 1px solid; PADDING-RIGHT: 0px; BORDER-TOP: #333333 1px solid; PADDING-LEFT: 0px; FONT-SIZE: 8pt; PADDING-BOTTOM: 0px; BORDER-LEFT: #333333 1px solid; COLOR: #000000; PADDING-TOP: 0px; BORDER-BOTTOM: #333333 1px solid; FONT-FAMILY: Tahoma, Arial, Courier, Verdana; BACKGROUND-COLOR: #999999;}
+.checkbox  {background-color: #999999; border: 1px;}
+.action    {background-color: #939393;}
+.folder    {background-color: #B0C4DE;}
+.filelist  {background-color: #A6A6A6;}
+.onfilelist{background-color: #C8D0E6;}
+.summary   {background-color: #E1E1E1;}
+
+table.valtab  { font-family: Tahoma; font-size: 8pt; line-height: 10.5pt; text-align:center; border-collapse:collapse; padding:0pt;}
+table.valtab tr { font-family: Tahoma; font-size: 8pt; line-height: 10.5pt; height: 10.5pt;}
+table.valtab td  { font-family: Tahoma;  font-size: 8pt; line-height: 10.5pt; height: 10.5pt; padding: 0pt;}
+textarea.valarea { font-family: Tahoma; font-size: 8pt; line-height: 10.5pt; padding:0pt; border-top:0pt; border-left:0pt;}
+.tab-on {
+padding: 2px;
+border-top-width: 1px;
+border-right-width: 1px;
+border-bottom-width: 1px;
+border-left-width: 1px;
+border-top-style: solid;
+border-right-style: none;
+border-bottom-style: solid;
+border-left-style: solid;
+border-top-color: #cccccc;
+border-right-color: #cccccc;
+border-bottom-color: #cccccc;
+border-left-color: #cccccc;
+color: #000000;
+background-color: #ffffff;
+width: 100px;
+}
+.tab-onr {
+padding: 2px;
+border-top-width: 1px;
+border-right-width: 1px;
+border-bottom-width: 1px;
+border-left-width: 1px;
+border-top-style: solid;
+border-right-style: solid;
+border-bottom-style: solid;
+border-left-style: solid;
+border-top-color: #cccccc;
+border-right-color: #cccccc;
+border-bottom-color: #cccccc;
+border-left-color: #cccccc;
+color: #000000;
+background-color: #ffffff;
+width: 100px;
+}
+.tab-off
+{
+padding: 2px;
+background-color: #f6f6f6;
+color: #666666;
+border-top: 1px solid #cccccc;
+border-right: 1px none #cccccc;
+border-bottom: 1px solid #cccccc;
+border-left: 1px solid #cccccc;
+width: 100px;
+}
+.tab-offr
+{
+padding: 2px;
+background-color: #f6f6f6;
+color: #666666;
+border-top: 1px solid #cccccc;
+border-right: 1px solid #cccccc;
+border-bottom: 1px solid #cccccc;
+border-left: 1px solid #cccccc;
+width: 100px;
+}
+.tab-none
+{
+border-top-width: 1px;
+border-right-width: 1px;
+border-bottom-width: 1px;
+border-left-width: 1px;
+border-top-style: none;
+border-right-style: none;
+border-bottom-style: solid;
+border-left-style: solid;
+border-top-color: #cccccc;
+border-right-color: #cccccc;
+border-bottom-color: #cccccc;
+border-left-color: #cccccc;
+}
+.show-table {display:table;}
+.hide-table {display: none;}
+inputbox, textarea, select, input
+{
+        color: #333333;
+        font-family: Verdana, Arial, Helvetica, sans-serif;
+        font-size: 11px;
+        font-weight: normal;
+        text-decoration: none;
+        background-color: #FFFFFF;
+        border: 1px solid #999999;}

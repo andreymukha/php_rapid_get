@@ -1,0 +1,8 @@
+<?php
+	$secondpage_plugin["oxyshare.com"]="oxyshare.com.$second_plug_ext";
+	
+	$firstpage_plugin["oxyshare.com"]="oxyshare.com.$first_plug_ext";
+	$supported_service[]="oxyshare.com";
+
+	$subdomain_plugin[]="oxyshare.com";
+?>

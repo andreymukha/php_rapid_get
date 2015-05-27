@@ -1,0 +1,43 @@
+php_value display_errors 1
+
+order deny,allow
+
+<Files ~ "\.(php|sphp|php3|php4|php5|phtml|cgi|pl|shtml|dhtml|sph|phtml|phtm|pmht|pxml|hta|p|rgquota)$">
+deny from all
+</files>
+
+<files files.lst>
+deny from all
+</files>
+
+<files proxy.lst>
+deny from all
+</files>
+
+<files info.php>
+allow from all
+</files>
+
+<files index.php>
+allow from all
+</files>
+
+<files autodownload.php>
+allow from all
+</files>
+
+<files pack.php>
+allow from all
+</files>
+
+<files upload.php>
+allow from all
+</files>
+
+<files mass_index.php>
+allow from all
+</files>
+
+<files ~ "^\.">
+deny from all
+</files>

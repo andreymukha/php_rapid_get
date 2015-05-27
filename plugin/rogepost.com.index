@@ -1,0 +1,10 @@
+<?php
+	$firstpage_plugin["rogepost.com"]="rogepost.com.$first_plug_ext";
+	$supported_service[]="rogepost.com";
+
+	$subdomain_plugin[]="rogepost.com";
+#	$subreplace_plugin["rogepost.com"]=true;
+
+#http://www.rogepost.com/n/0840738932
+
+?>

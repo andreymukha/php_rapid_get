@@ -1,0 +1,14 @@
+<?php
+	$firstpage_plugin["uafile.com"]="uafile.com.$first_plug_ext";
+	$firstpage_plugin["www.uafile.com"]="uafile.com.$first_plug_ext";
+	$firstpage_plugin["file2.uafile.com"]="uafile.com.$first_plug_ext";
+	$firstpage_plugin["file3.uafile.com"]="uafile.com.$first_plug_ext";
+	$firstpage_plugin["file4.uafile.com"]="uafile.com.$first_plug_ext";
+	$firstpage_plugin["file5.uafile.com"]="uafile.com.$first_plug_ext";
+	$supported_service[]="uafile.com";
+	$supported_service[]="www.uafile.com";
+	$supported_service[]="file2.uafile.com";
+	$supported_service[]="file3.uafile.com";
+	$supported_service[]="file4.uafile.com";
+	$supported_service[]="file5.uafile.com";
+?>

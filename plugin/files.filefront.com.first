@@ -1,0 +1,14 @@
+<?php
+	echo "test";
+    $page = geturl($Url["host"], $Url["port"] ? $Url["port"] : 80, $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), 0, 0, 0, 0, $_GET["proxy"] ,$pauth);
+	is_page($page);
+    $cookies = GetCookies($page);
+    $lokat = cut_str($page,'http://dodownload.filefront.com','"');
+    if(!$lokat) { html_error('Error retrive link');    }
+    
+    $url = parse_url('http://dodownload.filefront.com'.$lokat);
+
+	$FileName = "attachment";//!$FileName ? basename($Url["path"]) : $FileName;
+    $Referer = $_GET["orlink"];
+	insert_location("$PHP_SELF?command=download&FileName=".urlencode(base64_encode($FileName))."&cookie=".urlencode(base64_encode(serialize($cookies)))."&host=".urlencode(base64_encode($url[host]))."&path=".urlencode(base64_encode($url[path].($url["query"] ? "?".$url["query"] : "")))."&referer=".urlencode(base64_encode($Referer))."&email=".($_GET["domail"] ? $_GET["email"] : "")."&partSize=".($_GET[split] ? $_GET[partSize] : "")."&method=".$_GET[method]."&proxy=".($_GET["useproxy"] ? $_GET["proxy"] : "")."&saveto=".urlencode($_GET["savedir"])."&orlink=".urlencode(base64_encode($_GET["orlink"]))."&link=".urlencode(base64_encode($Href)).($_REQUEST["add_comment"] ? "&add_comment=on&comment=".urlencode($_REQUEST[comment]) : "").($pauth ? "&pauth=".urlencode($pauth) : "") ,$Href,$_GET["showdirect"] == "on");
+?>

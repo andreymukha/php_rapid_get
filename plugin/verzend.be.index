@@ -1,0 +1,6 @@
+<?php
+	$firstpage_plugin["verzend.be"]="verzend.be.$first_plug_ext";
+	$firstpage_plugin["www.verzend.be"]="verzend.be.$first_plug_ext";
+	$supported_service[]="verzend.be";
+	$supported_service[]="www.verzend.be";
+?>

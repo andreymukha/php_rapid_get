@@ -1,0 +1,39 @@
+<?php
+	$form_url=base64_decode(urldecode($_REQUEST["formurl"]));
+	$url=parse_url($form_url);
+
+	$post["file_password"]="";
+	$post["go"]="1";
+	$post["img_code"]=$_REQUEST["accesscode"];
+	$post["gateway_result"]=1;
+	$post["icid"]=$_REQUEST["icid"];
+	$cookies=unserialize(base64_decode($_REQUEST["cookie"]));
+	
+   foreach ($_COOKIE as $name => $value){
+        if (preg_match('/ic[\d]{6,}/', $name)){
+            $cookies .= "; ".$name."=".$value;
+        }    
+    }
+	$page = geturl($url["host"], defport($url), $url["path"].($url["query"] ? "?".$url["query"] : "?"), $form_url, $cookies, $post, 0, $_GET["proxy"],$pauth);
+	is_page($page);
+	if (strstr($page,"Invalid image code")){
+			echo "<center><font color=red>Incorrect is entered a code of the access. Retry<br /> Проверочный код неверен.</font></center><p>\n";
+			exit;
+	}
+    //print_r($page);
+	if (!strstr($page,"ocation:"))
+		{
+			html_error('Error: Not retrive redirection link');
+		}
+			else
+		{
+			$Href=trim(cut_str($page,"Location:","\n"));
+			if ($Href[0] == '/') {$Href=$url["scheme"].'://'.$url["host"].$Href;}
+		}
+	
+	if (!$Href) { html_error('Error get direct link'.$page); }
+	$Url = parse_url($Href);
+	$FileName = !$FileName ? basename($Url["path"]) : $FileName;
+
+	insert_location("$PHP_SELF?command=download&FileName=".urlencode(base64_encode($FileName))."&host=".urlencode(base64_encode($Url[host]))."&path=".urlencode(base64_encode($Url[path].($Url["query"] ? "?".$Url["query"] : "")))."&referer=".urlencode(base64_encode($Referer))."&email=".($_GET["domail"] ? $_GET["email"] : "")."&partSize=".($_GET[split] ? $_GET[partSize] : "")."&method=".$_GET[method]."&proxy=".($_GET["useproxy"] ? $_GET["proxy"] : "")."&saveto=".urlencode($_GET["savedir"])."&orlink=".urlencode(base64_encode($_GET["orlink"]))."&link=".urlencode(base64_encode($Href)).($_REQUEST["add_comment"] ? "&add_comment=on&comment=".urlencode($_REQUEST[comment]) : "").($pauth ? "&pauth=".urlencode($pauth) : ""),$Href,$_GET["showdirect"] == "on");
+?>

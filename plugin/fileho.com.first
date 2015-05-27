@@ -1,0 +1,23 @@
+<?php
+	$page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), 0, 0, 0, 0, $_GET["proxy"],$pauth);
+	is_page($page);
+	
+	is_present($page,'This File has been deleted because of abuse');
+	is_notpresent($page,'<b>Download link</b>','Download Link not found');
+
+	$cookies=GetCookies($page);
+	
+	$inf=preg_grep('/<b>Download link<\/b>/', explode("\n",$page));
+	if (!count($inf)) html_error('Error retrive download link');
+	$fl_array = array_pop($inf);
+	
+	$Href=trim(cut_str($fl_array,'<a href="','"'));
+	$Href=str_replace('http://edn.redswoosh.net/','',$Href);
+	
+	if (!$Href) { html_error('Error get direct link'); }
+
+	$Url = parse_url($Href);
+	$FileName = !$FileName ? basename($Url["path"]) : $FileName;
+	
+	insert_location("$PHP_SELF?command=download&FileName=".urlencode(base64_encode($FileName))."&cookie=".urlencode(base64_encode(serialize($cookies)))."&host=".urlencode(base64_encode($Url[host]))."&path=".urlencode(base64_encode($Url[path].($Url["query"] ? "?".$Url["query"] : "")))."&referer=".urlencode(base64_encode($Referer)).addmailtolink_2()."&proxy=".($_GET["useproxy"] ? $_GET["proxy"] : "")."&saveto=".urlencode($_GET["savedir"])."&orlink=".urlencode(base64_encode($_GET["orlink"]))."&link=".urlencode(base64_encode($Href)).($_REQUEST["add_comment"] ? "&add_comment=on&comment=".urlencode($_REQUEST[comment]) : "").($pauth ? "&pauth=".urlencode($pauth) : ""),$Href,$_GET["showdirect"] == "on");
+?>

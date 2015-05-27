@@ -1,0 +1,18 @@
+<?php
+	$secondpage_plugin["rapidshare"]="rapidshare.$second_plug_ext";
+	$secondpage_plugin["rapidshare.com"]="rapidshare.$second_plug_ext";
+	$secondpage_plugin["rapidshare.de"]="rapidshare.$second_plug_ext";
+	$secondpage_plugin["www.rapidshare"]="rapidshare.$second_plug_ext";
+	$secondpage_plugin["www.rapidshare.com"]="rapidshare.$second_plug_ext";
+	$secondpage_plugin["www.rapidshare.de"]="rapidshare.$second_plug_ext";
+	
+
+	$firstpage_plugin["www.rapidshare.com"]="rapidshare.com.$first_plug_ext";
+	$supported_service[]="www.rapidshare.com";
+	$firstpage_plugin["rapidshare.com"]="rapidshare.com.$first_plug_ext";
+	$supported_service[]="rapidshare.com";
+
+	$rapidlogin_com=false;					#false - free режим работы или задание логина в форме (rapidshare.com)
+	$rapidpass_com=false;					#false - free режим работы или задание пароля в форме (rapidshare.com)
+
+?>

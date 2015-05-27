@@ -1,0 +1,4 @@
+<?php
+	$firstpage_plugin["archiv.to"]="archiv.to.$first_plug_ext";
+	$supported_service[]="archiv.to";
+?>

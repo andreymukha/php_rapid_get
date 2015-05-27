@@ -1,0 +1,4 @@
+<?php
+	$firstpage_plugin["www.bestsharing.com"]="www.bestsharing.com.$first_plug_ext";
+	$supported_service[]="www.bestsharing.com";
+?>

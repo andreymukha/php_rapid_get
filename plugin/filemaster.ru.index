@@ -1,0 +1,6 @@
+<?php
+	$firstpage_plugin["filemaster.ru"]="filemaster.ru.$first_plug_ext";
+	$firstpage_plugin["www.filemaster.ru"]="filemaster.ru.$first_plug_ext";
+	$supported_service[]="filemaster.ru";
+	$supported_service[]="www.filemaster.ru";
+?>

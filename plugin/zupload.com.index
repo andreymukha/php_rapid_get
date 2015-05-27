@@ -1,0 +1,8 @@
+<?php
+	$firstpage_plugin["zupload.com"]="zupload.com.$first_plug_ext";
+	$supported_service[]="zupload.com";
+
+	$subdomain_plugin[]="zupload.com";
+#	$subreplace_plugin["zupload.com"]=true;
+
+?>

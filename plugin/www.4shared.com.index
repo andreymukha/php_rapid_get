@@ -1,0 +1,4 @@
+<?php
+	$firstpage_plugin["www.4shared.com"]="www.4shared.com.$first_plug_ext";
+	$supported_service[]="www.4shared.com";
+?>

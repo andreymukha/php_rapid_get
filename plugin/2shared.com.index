@@ -1,0 +1,8 @@
+<?php
+	$firstpage_plugin["2shared.com"]="2shared.com.$first_plug_ext";
+	$supported_service[]="2shared.com";
+
+	$subdomain_plugin[]="2shared.com";
+#	$subreplace_plugin["2shared.com"]=true;
+
+?>

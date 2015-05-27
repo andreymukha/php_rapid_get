@@ -1,0 +1,22 @@
+<?php
+	@parse_str($Url["query"],$param);
+	
+	if (!@is_array($param) && !$param['id'] && !$param['filepath'])
+		{
+			html_error('Error in URL. Unknown ID');
+		}
+		
+	$fileid=$param['id'] ? $param['id'] : ($param['filepath'] ? $param['filepath'] : 0) ;
+	
+	$Href='http://'.$Url["host"].'/file.php?filepath='.$fileid;
+	$Referer='http://'.$Url["host"].'/download.php?file=getfile&filepath='.$fileid;
+	
+	if (!$Href) { html_error('Error get direct link'); }
+	
+	$Href=$link_start.$Href;
+
+	$Url = parse_url($Href);
+	$FileName = !$FileName ? basename($Url["path"]) : $FileName;
+	
+	insert_location("$PHP_SELF?command=download&FileName=".urlencode(base64_encode($FileName))."&cookie=".urlencode(base64_encode(serialize($cookies)))."&host=".urlencode(base64_encode($Url[host]))."&path=".urlencode(base64_encode($Url[path].($Url["query"] ? "?".$Url["query"] : "")))."&referer=".urlencode(base64_encode($Referer)).addmailtolink_2()."&proxy=".($_GET["useproxy"] ? $_GET["proxy"] : "")."&saveto=".urlencode($_GET["savedir"])."&orlink=".urlencode(base64_encode($_GET["orlink"]))."&link=".urlencode(base64_encode($Href)).($_REQUEST["add_comment"] ? "&add_comment=on&comment=".urlencode($_REQUEST[comment]) : "").($pauth ? "&pauth=".urlencode($pauth) : ""),$Href,$_GET["showdirect"] == "on");
+?>

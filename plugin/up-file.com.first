@@ -1,0 +1,72 @@
+<?php
+	$agent='Mozilla/4.0 (compatible; MSIE 5.00; Windows 98)';
+			
+	$page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), 0, 0, 0, 0, $_GET["proxy"],$pauth);
+	is_page($page);
+	
+	is_present($page,"File delited for abuse","This file deleted from servers");
+	
+	$cookies[]='access='.basename($LINK,'.html');
+	
+	if (strstr($page,">Download Link.</a>"))
+		{
+			$fl=array_pop(preg_grep('/>Download Link.<\/a>/', explode("\n",$page)));
+			
+			$Href=strstr(cut_str($fl,"<a href='","'"),'http://');
+
+			if (!$Href) { html_error("File not found or deleted"); }
+
+			$Url = parse_url($Href);
+			$FileName = !$FileName ? basename($Url["path"]) : $FileName;
+           
+			insert_location("$PHP_SELF?command=download&FileName=".urlencode(base64_encode($FileName))."&newagent=".urlencode($agent)."&cookie=".urlencode(base64_encode(serialize($cookies)))."&host=".urlencode(base64_encode($Url[host]))."&path=".urlencode(base64_encode($Url[path].($Url["query"] ? "?".$Url["query"] : "")))."&referer=".urlencode(base64_encode($LINK)).addmailtolink_2()."&proxy=".($_GET["useproxy"] ? $_GET["proxy"] : "")."&saveto=".urlencode($_GET["savedir"])."&orlink=".urlencode(base64_encode($_GET["orlink"]))."&link=".urlencode(base64_encode($Href)).($_REQUEST["add_comment"] ? "&add_comment=on&comment=".urlencode($_REQUEST[comment]) : "").($pauth ? "&pauth=".urlencode($pauth) : ""),$Href,$_GET["showdirect"] == "on");
+			exit;
+		}
+		
+/*	if (strstr($page,'Your link here. Up-file free for all.'))
+		{
+			$newurl=trim(cut_str($page,'<form action="http://up-file.com/download2/','"'));
+			if ($url) html_error('error get download page');
+			
+			$newurl='http://up-file.com/download2/'.$newurl;
+			
+			$url=parse_url($newurl);
+			$post["zu"]=cut_str($page,'name="zu" value="','"');
+			$post["second"]="free";
+			
+			$page = geturl($url["host"], defport($url), $url["path"].($url["query"] ? "?".$url["query"] : ""), 0, 0, $post, 0, $_GET["proxy"],$pauth);
+			is_page($page);
+			
+			is_present($page,'We are really sorry. Free slots are overfilled. Please try later');
+			
+			exit;
+		}
+*/		
+	if (strstr($page,'http://apcii.com'))
+		{
+			$newurl='http://apcii.com/';
+			$post["upfile"]='upfile';
+			$post["zu"]=cut_str($page,'name="zu" value="','"');
+			$post["uid"]=cut_str($page,'name="uid" value="','"');
+			$post["name"]=cut_str($page,'name="name" value="','"');
+			$post["count"]=cut_str($page,'name="count" value="','"');
+			
+			$url=parse_url($newurl);
+			$page = geturl($url["host"], defport($url), $url["path"].($url["query"] ? "?".$url["query"] : ""), 0, 0, $post, 0, $_GET["proxy"],$pauth);
+			is_page($page);
+			
+			$Href=trim(cut_str($page,'<div align="center">'."\n<a href='","'"));
+			
+			if (!$Href) { html_error("File not found or deleted"); }
+
+			
+			$Url = parse_url($Href);
+			$FileName = !$FileName ? basename($Url["path"]) : $FileName;
+           
+			insert_location("$PHP_SELF?command=download&FileName=".urlencode(base64_encode($FileName))."&newagent=".urlencode($agent)."&cookie=".urlencode(base64_encode(serialize($cookies)))."&host=".urlencode(base64_encode($Url[host]))."&path=".urlencode(base64_encode($Url[path].($Url["query"] ? "?".$Url["query"] : "")))."&referer=".urlencode(base64_encode($LINK)).addmailtolink_2()."&proxy=".($_GET["useproxy"] ? $_GET["proxy"] : "")."&saveto=".urlencode($_GET["savedir"])."&orlink=".urlencode(base64_encode($_GET["orlink"]))."&link=".urlencode(base64_encode($Href)).($_REQUEST["add_comment"] ? "&add_comment=on&comment=".urlencode($_REQUEST[comment]) : "").($pauth ? "&pauth=".urlencode($pauth) : ""),$Href,$_GET["showdirect"] == "on");
+			exit;
+			
+		}
+	
+	html_error('This service change protection');
+?>

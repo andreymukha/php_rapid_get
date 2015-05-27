@@ -1,0 +1,13 @@
+<?php
+	$firstpage_plugin["icefile.org"]="www.icefile.org.$first_plug_ext";
+	$firstpage_plugin["icefile.net"]="www.icefile.org.$first_plug_ext";
+	$firstpage_plugin["icefile.com"]="www.icefile.org.$first_plug_ext";
+	
+	$supported_service[]="icefile.org";
+	$supported_service[]="icefile.net";
+	$supported_service[]="icefile.com";
+	
+	$subdomain_plugin[]="icefile.org";
+	$subdomain_plugin[]="icefile.net";
+	$subdomain_plugin[]="icefile.com";
+?>

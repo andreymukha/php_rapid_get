@@ -1,0 +1,9 @@
+<?php
+	$firstpage_plugin["filefactory.com"]="filefactory.com.$first_plug_ext";
+	$firstpage_plugin["www.filefactory.com"]="filefactory.com.$first_plug_ext";
+
+	$secondpage_plugin["filefactory.com"]="filefactory.com.$second_plug_ext";
+
+	$supported_service[]="filefactory.com";
+	$supported_service[]="www.filefactory.com";
+?>

@@ -1,0 +1,93 @@
+<?php
+	$cap_md5=array();
+	$cdir=getcwd();
+	$spbland_ready=false;
+	
+	function load_spbland_md5()
+		{
+			global $cap_md5, $cdir;
+			
+			$cap_dir=opendir($cdir.DIRECTORY_SEPARATOR.'plugin'.DIRECTORY_SEPARATOR.'spbland');
+			if (!$cap_dir) { return false;}
+			
+			while (false !== ($file = readdir($cap_dir)))
+				{
+					if ($file[0] == ".") { continue; }
+					if (is_dir($cdir.DIRECTORY_SEPARATOR.'plugin'.DIRECTORY_SEPARATOR.'spbland'.DIRECTORY_SEPARATOR.$file)) { continue; }
+					
+					$md5_=md5_file($cdir.DIRECTORY_SEPARATOR.'plugin'.DIRECTORY_SEPARATOR.'spbland'.DIRECTORY_SEPARATOR.$file);
+					list($index,$ext)=explode('.',$file);
+					$cap_md5[$md5_]=$index+1;
+				}
+			
+			closedir($cap_dir);
+			
+			return (count($cdir) > 1 ? true : false);
+		}
+	
+	function get_captcha_spbland($list_cap)
+		{
+			global $cap_md5;
+			
+			$res_cap="";
+			for ($i=0; $i< count($list_cap); $i++)
+				{
+					$tmp=$cap_md5[$list_cap[$i]];
+					if (!$tmp) { return false; }
+					$res_cap.=($tmp-1);
+				}
+			return $res_cap;
+		}
+	
+	$spbland_ready=load_spbland_md5();
+	
+	$page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), 0, 0, 0, 0, $_GET["proxy"],$pauth);
+	is_page($page);
+	is_notpresent($page,'Для того, чтобы скачать файл, введите цифры, указанные на картинке и нажмите кнопку');
+	
+	$image_code=cut_str($page,'Для того, чтобы скачать файл, введите цифры, указанные на картинке и нажмите кнопку');
+	
+	$i=preg_match_all("/<td><img src=\"(.*)\"><\/td>/",$image_code,$image_list);
+	
+	if (!count($image_list[1]))
+		{
+			html_error('Service change protect method or error link');
+		}
+	
+	$PHPSESSID=cut_str($page,'PHPSESSID=',"\n");
+	
+	#get_cap
+	for ($j=0; $j<$i; $j++)
+		{
+			$url_=parse_url($image_list[1][$j]);
+			
+			$chars = geturl($url_["host"], defport($url_), $url_["path"].($url_["query"] ? "?".$url_["query"] : ""), $LINK, 0, 0, 0, $_GET["proxy"],$pauth);
+			is_page($chars);
+			
+			list($head,$info)=explode($nn.$nn,$chars,2);
+			
+			$capth[$j]=md5($info);
+		}
+	
+	
+	$imagecode=get_captcha_spbland($capth);
+	
+	if ($imagecode === false)
+		{
+			html_error('Update captha image in spbland dir');
+		}
+					
+	$cookies[]="PHPSESSID=$PHPSESSID";
+	
+	$postquery["validkode"]=$imagecode;
+	
+	$page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), 0, $cookies, $postquery, 0, $_GET["proxy"],$pauth);
+	
+	$Href=str_replace('/files/','/get/',$LINK);
+	if (!$Href) { html_error('Error get direct link'); }
+	
+	$Url = parse_url($Href);
+	$FileName = !$FileName ? basename($Url["path"]) : $FileName;
+	
+	insert_location("$PHP_SELF?command=download&FileName=".urlencode(base64_encode($FileName))."&cookie=".urlencode(base64_encode(serialize($cookies)))."&host=".urlencode(base64_encode($Url[host]))."&path=".urlencode(base64_encode($Url[path].($Url["query"] ? "?".$Url["query"] : "")))."&referer=".urlencode(base64_encode($LINK)).addmailtolink_2()."&proxy=".($_GET["useproxy"] ? $_GET["proxy"] : "")."&saveto=".urlencode($_GET["savedir"])."&orlink=".urlencode(base64_encode($_GET["orlink"]))."&link=".urlencode(base64_encode($Href)).($_REQUEST["add_comment"] ? "&add_comment=on&comment=".urlencode($_REQUEST[comment]) : "").($pauth ? "&pauth=".urlencode($pauth) : ""),$Href,$_GET["showdirect"] == "on");
+?>

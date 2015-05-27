@@ -1,0 +1,125 @@
+<?php
+	# Download plug'in from Director Of Zoo (member ru-board <kamyshew>)
+	#за предоставленые акки дл€ тестов благодарим ru-board member's <starsh1ne> & <stas1971>
+
+     /* получение картинки*/
+     
+     
+     $depos_mem = false; 
+     if($deposit_login & $deposit_pass) $depos_mem = true;
+     $lang = "lang_current=en";// определ€ем €зык	
+    // рубимс€ к депозиту по примаку
+     if ($depos_mem) {
+         $post['login'] = $deposit_login;
+         $post['password'] = $deposit_pass;
+         $post['go'] = 1;
+         $page_mem = geturl($Url["host"], defport($Url), "/en/login.php?return=%2Fru%2Fgold%2F", 0, $lang, $post, 0, $_GET["proxy"],$pauth);
+         is_page($page_mem);
+         unset($post);
+         if(!strpos($page_mem,"autologin")){
+            echo "<center><b>Error in Depositfiles Gold account info<br>Used <span style='color:red'>free</span> account</b></center>\n";
+            $depos_mem = false;    
+         }else{
+            $cook = GetCookies($page_mem,true);
+            $cookie = @implode("; ",$cook);
+			$cookie .= "; ".$lang;
+            echo "<center><b>OK Depositfiles Gold account<br>Used <span style='color:green'>GOLD</span> account</b></center>\n";
+         }
+     }
+    
+    if(!$depos_mem){    //free
+	    $page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), 0, $lang, 0, 0, $_GET["proxy"],$pauth);
+	    is_page($page);
+	    $cook = GetCookies($page,true);
+	    $cookie = @implode("; ",$cook);
+		$cookie .= "; ".$lang;
+    }          
+
+	$temp_url=$Url["path"].($Url["query"] ? "?".$Url["query"] : "");
+	$post["gateway_result"]="1"; $post["x"]=""; $post["y"]="";
+	
+	$pos_=strpos($temp_url,'/files/');
+	if ($pos_ === false)
+		{
+			html_error('Error in link. No depositfiles.com link ');
+		}
+	
+	$temp_url='/en'.substr($temp_url,$pos_);
+		
+	$page = geturl($Url["host"], defport($Url), $temp_url, 0, $cookie, $post, 0, $_GET["proxy"],$pauth);
+	
+	is_page($page);
+	$cook2 = GetCookies($page,true);
+	$cookie2 = @implode("; ",$cook2);
+
+	#ѕроверка на ошибки
+    is_present($page,"downloading slots","We are sorry, but all downloading slots for your country are busy.");
+    is_present($page,"Such file does not exist or it has been removed");
+	is_present($page,"No such file, or file inaccessible for downloading");
+	is_present($page,"From yours IP addresses already there","From yours IP addresses already there is a downloading a file from our system");
+	is_present($page,"Please, enter the password for this file","Excuse me, given file passworded");
+    
+    if ($depos_mem){
+        $Href=cut_str($page,'dwnsrc = "','"');
+        if(!$Href) html_error("Error Get Download link!");
+        $Url = parse_url($Href);
+        $FileName = basename($Href);
+
+        $Referer = $_GET["orlink"];
+        insert_location("$PHP_SELF?command=download&FileName=".urlencode(base64_encode($FileName))."&cookie=".urlencode(base64_encode(serialize($cookie)))."&host=".urlencode(base64_encode($Url[host]))."&path=".urlencode(base64_encode($Url[path].($Url["query"] ? "?".$Url["query"] : "")))."&referer=".urlencode(base64_encode($Referer))."&email=".($_GET["domail"] ? $_GET["email"] : "")."&partSize=".($_GET[split] ? $_GET[partSize] : "")."&method=".$_GET[method]."&proxy=".($_GET["useproxy"] ? $_GET["proxy"] : "")."&saveto=".urlencode($_GET["savedir"])."&orlink=".urlencode(base64_encode($_GET["orlink"]))."&link=".urlencode(base64_encode($Href)).($_REQUEST["add_comment"] ? "&add_comment=on&comment=".urlencode($_REQUEST[comment]) : "").($pauth ? "&pauth=".urlencode($pauth) : ""),$Href,$_GET["showdirect"] == "on");
+    }else{
+       
+	    $countDown=trim(cut_str($page,'show_url(',")"));
+	    insert_timer($countDown, "Waiting link timelock.","",true);
+		
+	    $tmp = cut_str($page,"img_code_url = '","'");
+	    function getTime() 
+	    { 
+    		list($usec, $sec) = explode(" ", microtime()); 
+    		$usec=substr(round($usec, 3), 2);
+    		for($i=0; $i<13-strlen($usec); $i++)
+    			$usec.="0";
+    		return ($sec.$usec); 
+	    }
+   	    $access_image_url="http://depositfiles.com".$tmp."&rnd=".getTime();
+	    if (!$tmp)
+		    {
+			    html_error('Error get image url. This service change protect method'.$page);
+		    }
+	    $cookies2 = $cookie."; ".$cookie2; 
+
+	    $newlink="$PHP_SELF?command=image&cookie=".base64_encode(serialize($cookies2))."&link=".urlencode(base64_encode($access_image_url))."&ref=".urlencode(base64_encode($_GET["orlink"])).($_GET["useproxy"] == "on" ? "&useproxy=on&proxy=".$_GET["proxy"] : "").($pauth ? "&pauth=".urlencode($pauth):"");
+	    
+	    echo "<form action=$PHP_SELF method=post>\n";
+	    echo "<input type=hidden name=command value=second>\n";
+	    echo "<input type=hidden name=services value='depositfiles.com'>\n";
+
+	    echo "<input type=hidden name=formurl value='".urlencode(base64_encode("http://".$Url["host"].$temp_url))."'>\n";
+	    echo "<input type=hidden name=access_image_url value='".urlencode(base64_encode($newlink))."'>\n";
+	    
+	    
+	    echo "<input type=hidden name=cookie value='".base64_encode(serialize($cookies2))."'>\n";
+	    
+	    echo "<input type=hidden name=saveto value=".$_REQUEST[saveto].">\n";
+	    echo "<input type=hidden name=savedir value=".urlencode($_REQUEST[savedir]).">\n";
+	    echo "<input type=hidden name=icid value='".cut_str($access_image_url, "icid=", "&")."' >";
+	    echo "<input type=hidden name=ref value=".urlencode(base64_encode($LINK)).">\n";
+	    echo "<input type=hidden name=orlink value=".urlencode(base64_encode($LINK)).">\n";
+	    echo "<input type=hidden name=link value=".urlencode(base64_encode($LINK)).">\n";
+	    echo ($_REQUEST["add_comment"] ? "<input type=hidden name=add_comment value=on>\n<input type=hidden name=comment value=".urlencode($_REQUEST[comment]).">\n" : "");
+	    echo "<input type=hidden name=domail value=".$_GET[domail].">\n";
+	    echo "<input type=hidden name=email value=".$_GET[email].">\n";
+	    echo "<input type=hidden name=useproxy value=".$_GET[useproxy].">\n";
+	    echo "<input type=hidden name=proxy value=".$_GET[proxy].">\n";
+	    echo "<input type=hidden name=split value=".$_GET[split].">\n";
+	    echo "<input type=hidden name=method value=".$_GET[method].">\n";
+	    echo "<input type=hidden name=partSize value=".$_GET[partSize].">\n";
+	    echo "<input type=hidden name=showdirect value=".($_GET["showdirect"] == "on" ? "on" : "").">\n";
+	    echo ($pauth ? "<input type=hidden name=pauth value=".urlencode($pauth).">\n" : "");
+
+	    echo "<h3>Please enter <img align=middle src=\"$newlink\"> here: <input type=text name=accesscode size=6 maxlength=6>  <input type=submit value=\"Download file\"></h3>\n";
+	    echo "</form>\n";
+    }
+    
+        # Download plug'in from Director Of Zoo (ru-board member <kamyshew>).
+?>

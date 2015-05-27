@@ -1,0 +1,14 @@
+<?
+$code_close=$accesscode;
+$start_url = base64_decode(urldecode(trim($_REQUEST[starturl])));
+$close_url = base64_decode(urldecode(trim($_REQUEST[closeurl])));
+$Href = $start_url.($_REQUEST['accesscode']).$close_url;
+$FileName = base64_decode(urldecode(trim($_REQUEST[FileName])));
+
+$referer = $_REQUEST[link];
+$Url = parse_url($Href);
+
+insert_location("$PHP_SELF?$code_close=".$code_close."&command=download&FileName=".$_REQUEST[FileName]."&host=".urlencode(base64_encode($Url[host]))."&path=".urlencode(base64_encode($Url[path].($Url["query"] ? "?".$Url["query"] : "")))."&referer=".$referer."&email=".($_REQUEST["domail"] ? $_REQUEST["email"] : "")."&partSize=".($_REQUEST[split] ? $_REQUEST[partSize] : "")."&method=".$_REQUEST[method]."&proxy=".($_REQUEST["useproxy"] ? $_REQUEST["proxy"] : "")."&saveto=".$_REQUEST["savedir"]."&orlink=".$_REQUEST["orlink"]."&link=".urlencode(base64_encode($Href)).($_REQUEST["add_comment"] ? "&add_comment=on&comment=".urlencode($_REQUEST[comment]) : "").($_REQUEST[pauth] ? "&pauth=".$_REQUEST[pauth] : ""),$Href,$_REQUEST["showdirect"] == "on");
+	# Автор плагина Director Of Zoo (aka 'kamyshew') 2007.
+	# Совместно с TRiTON4ik.	
+?>

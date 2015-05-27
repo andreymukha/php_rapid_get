@@ -1,0 +1,15 @@
+<?php
+	$page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), 0, 0, 0, 0, $_GET["proxy"],$pauth);
+	is_page($page);
+	is_notpresent($page,"Download file","File not ready or not found");
+	
+	$Href="http://".$Url["host"]."/file.php?filepath=".cut_str($page,'href="file.php?filepath=','"');
+	
+	if ($Href == "http://".$Url["host"]."/file.php?filepath=") { html_error('Error retrive link');	}
+
+	$Referer=$LINK;
+	$Url = parse_url($Href);
+	$FileName = "attachment";
+
+	insert_location("$PHP_SELF?command=download&FileName=".urlencode(base64_encode($FileName))."&host=".urlencode(base64_encode($Url[host]))."&path=".urlencode(base64_encode($Url[path].($Url["query"] ? "?".$Url["query"] : "")))."&referer=".urlencode(base64_encode($Referer)).addmailtolink_2()."&proxy=".($_GET["useproxy"] ? $_GET["proxy"] : "")."&saveto=".urlencode($_GET["savedir"])."&orlink=".urlencode(base64_encode($_GET["orlink"]))."&link=".urlencode(base64_encode($Href)).($_REQUEST["add_comment"] ? "&add_comment=on&comment=".urlencode($_REQUEST[comment]) : "").($pauth ? "&pauth=".urlencode($pauth) : ""),$Href,$_GET["showdirect"] == "on");
+?>

@@ -1,0 +1,27 @@
+<?php
+	$form_url=base64_decode(urldecode($_REQUEST["link"]));
+	
+	$post["id"]=$_REQUEST["fileid"];
+	$post["s"]=$_REQUEST["second_s"];
+	$post["simage"]=$_REQUEST["second_simage"];
+	$post["t"]=$_REQUEST["second_t"];
+	$post["pf"]=$_REQUEST["second_pf"];
+	$post["encode"]=$_REQUEST["accesscode"];
+	
+	$url=parse_url($form_url);
+	$page = chunked(geturl($url["host"], defport($url), $url["path"].($url["query"] ? "?".$url["query"] : ""), $form_url, 0, $post, 0, $_GET["proxy"],$pauth));
+
+	is_notpresent($page,'Click here to download file','Error enter code or other error');
+	
+	$loc_var=trim(cut_str($page,"{document.getElementById(\"wait\").innerHTML = '<b><a href=\"' + "," + '\">Click here to download file</a>"));
+	
+	$loc_val=trim(cut_str($page,"$loc_var = une"."scape('","');"));
+	$Href=urldecode($loc_val);
+	
+	if (!$Href) { html_error('Error get direct link'); }
+	$Url = parse_url($Href);
+	$FileName = !$FileName ? basename($Url["path"]) : $FileName;
+
+	insert_location("$PHP_SELF?command=download&FileName=".urlencode(base64_encode($FileName))."&host=".urlencode(base64_encode($Url[host]))."&path=".urlencode(base64_encode($Url[path].($Url["query"] ? "?".$Url["query"] : "")))."&referer=".urlencode(base64_encode($Referer)).addmailtolink_2()."&proxy=".($_GET["useproxy"] ? $_GET["proxy"] : "")."&saveto=".urlencode($_GET["savedir"])."&orlink=".urlencode(base64_encode($_GET["orlink"]))."&link=".urlencode(base64_encode($Href)).($_REQUEST["add_comment"] ? "&add_comment=on&comment=".urlencode($_REQUEST[comment]) : "").($pauth ? "&pauth=".urlencode($pauth) : ""),$Href,$_GET["showdirect"] == "on");
+	exit;
+?>

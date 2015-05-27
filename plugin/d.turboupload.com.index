@@ -1,0 +1,5 @@
+<?php
+	$secondpage_plugin["d.turboupload.com"]="d.turboupload.com.$second_plug_ext";
+	$firstpage_plugin["d.turboupload.com"]="d.turboupload.com.$first_plug_ext";
+	$supported_service[]="d.turboupload.com";
+?>

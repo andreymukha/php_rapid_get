@@ -1,0 +1,16 @@
+<?php
+
+$post['file_id']=$_POST['fileid'];
+$post['secret']=$_POST['accesscode'];
+
+$page = geturl("openfile.ru", 80, $_POST['fileid'], 0, "PHPSESSID=".$_POST['session_id'], $post, 0, $_GET["proxy"],$pauth);
+
+is_present("Число введено неверно");
+$durl=cut_str($page,'<a href="http://dl2','"');
+if (!$durl) html_error("Server changed protect method");
+
+$durl="http://dl2".$durl;
+$Url=parse_url($durl);
+
+insert_location("$PHP_SELF?command=download&FileName=".urlencode(base64_encode(basename($durl)))."&host=".urlencode(base64_encode($Url[host]))."&path=".urlencode(base64_encode($Url[path].($Url["query"] ? "?".$Url["query"] : "")))."&proxy=".($_GET["useproxy"] ? $_GET["proxy"] : "")."&saveto=".urlencode($_GET["savedir"])."&orlink=".urlencode(base64_encode($_GET["orlink"]))."&link=".urlencode(base64_encode($durl)).($_REQUEST["add_comment"] ? "&add_comment=on&comment=".urlencode($_REQUEST[comment]) : "").($pauth ? "&pauth=".urlencode($pauth) : ""),$durl,$_GET["showdirect"] == "on");
+?>

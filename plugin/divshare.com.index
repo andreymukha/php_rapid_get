@@ -1,0 +1,6 @@
+<?php
+	$firstpage_plugin["divshare.com"]="divshare.com.$first_plug_ext";
+	$firstpage_plugin["www.divshare.com"]="divshare.com.$first_plug_ext";
+	$supported_service[]="divshare.com";
+	$supported_service[]="www.divshare.com";
+?>

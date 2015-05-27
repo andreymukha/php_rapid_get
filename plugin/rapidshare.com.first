@@ -1,0 +1,249 @@
+<?php
+    $disable_timer=false;
+    
+    if ($_GET["rapidpremium_com"] == "on")
+        {
+            $lrapidlogin=$_GET["rrapidlogin_com"] ? $_GET["rrapidlogin_com"] : $rapidlogin_com;
+            $lrapidpass=$_GET["rrapidpass_com"] ? $_GET["rrapidpass_com"] : $rapidpass_com;
+        }
+            else
+        {
+            $use_config=true;
+            $lrapidlogin=$rapidlogin_com ? $rapidlogin_com : false;
+            $lrapidpass=$rapidpass_com ? $rapidpass_com : false;
+        }
+            
+    if ($lrapidlogin === false || $lrapidpass === false)
+        {
+            if ($_GET["rapidpremium_com"] == "on")
+                {
+                    echo "<center><b>Error in rapidshare Premium account info<br>Used free account</b></center>\n";
+                }
+        }
+            else
+        {
+            
+            if (is_numeric($lrapidlogin))
+                {
+                    echo "<center><b>Use PREMIUM account</b></center>";
+                }
+                    else
+                {
+                    echo "<center><b>Error in rapidshare Premium account info (Contains not numerals)<br>Used free account</b></center>\n";
+                    $lrapidlogin = false;
+                    $lrapidpass = false;
+                }
+        }
+    
+    if ($lrapidlogin && $lrapidpass)
+        {
+            # Работа с рапидой через Премиум Аккаунт
+            
+            $cookies[]="user=$lrapidlogin".'-'.urlencode($lrapidpass)."; path=/";
+            
+            $page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), 0, $cookies, 0, 0, $_GET["proxy"],$pauth);
+            
+            is_page($page);
+            
+            if (strstr($page,"Location:"))
+                {
+                    $Href=trim(cut_str($page,"Location: ","\n"));
+                    $Url = parse_url($Href);
+                    $FileName = !$FileName ? basename($Url["path"]) : $FileName;
+           
+                    insert_location("$PHP_SELF?command=download&FileName=".urlencode(base64_encode($FileName)).($use_config === true ? "&rapidsharecomconfig=on" : "&cookie=".urlencode(base64_encode(serialize($cookies))))."&host=".urlencode(base64_encode($Url[host]))."&path=".urlencode(base64_encode($Url[path].($Url["query"] ? "?".$Url["query"] : "")))."&referer=".urlencode(base64_encode($Referer)).addmailtolink_2().($_GET["useproxy"] == "on" ? "&useproxy=on&proxy=".$_GET["proxy"] : "")."&saveto=".urlencode($_GET["savedir"])."&orlink=".urlencode(base64_encode($_GET["orlink"]))."&link=".urlencode(base64_encode($Href)).($_GET["add_comment"] ? "&comment=".urlencode($_GET["comment"]) : "").($pauth ? "&pauth=".urlencode($pauth) : ""),$Href,$_GET["showdirect"] == "on");
+                    exit;
+                }
+    
+            is_present($page,"THIS FILE IS FORBIDDEN TO BE SHARED");
+            is_present($page,'has been deleted',"This file has been deleted");
+            is_present($page,"File ".$Url[path]." not found","File Not Found!");
+            is_present($page,"Inactivity-timeout exceeded","Inactivity-timeout exceeded");
+            is_present($page,"Extend your account right now and continue using RapidShare PREMIUM","This account is expired. Use Free mode");
+            is_present($page,'You have downloaded more than','You have downloaded more than'.cut_str($page,'<p>You have downloaded more than','</p>'));
+            
+            $server_id=trim(cut_str($page,'alert("Download-Server','unavailable due to technical-maintenance'));
+            is_present($page,"unavailable due to technical-maintenance","Download-Server $server_id unavailable due to technical-maintenance");
+    
+            unset($post);
+            $fn=basename($LINK,'.html');
+            $action_url=trim(cut_str($page,'action="','"'));
+
+            echo "<!-- action_url='$action_url' $fn -->\n";
+            $Url=parse_url($action_url);
+            
+            $post["dl.start"] = "PREMIUM";
+            $page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : "") ,0 , $cookies, $post, 0, $_GET["proxy"],$pauth);
+            is_page($page);
+            
+            is_present($page,"Account found, but password is incorrect.");
+            is_present($page,"Account not found","Premium Account not found");
+            is_present($page,"is closed for today because of too much download-traffic","This account is closed for today because of too much download-traffic.");
+            is_present($page,'You have downloaded more than','You have downloaded more than'.cut_str($page,'You have downloaded more than','</p>'));
+            
+            $tmp_=trim(strstr($page,'You have requested'));
+            $Href=trim(cut_str($tmp_,'href="','"'));
+                
+            if (!$Href) { html_error('Error retrive direct link 2');}
+            
+            $Url = parse_url($Href);
+            $FileName = !$FileName ? basename($Url["path"]) : $FileName;
+           
+               insert_location("$PHP_SELF?command=download&FileName=".urlencode(base64_encode($FileName)).($use_config === true ? "&rapidsharecomconfig=on" : "&cookie=".urlencode(base64_encode(serialize($cookies))))."&host=".urlencode(base64_encode($Url[host]))."&path=".urlencode(base64_encode($Url[path].($Url["query"] ? "?".$Url["query"] : "")))."&referer=".urlencode(base64_encode($Referer)).addmailtolink_2().($_GET["useproxy"] == "on" ? "&useproxy=on&proxy=".$_GET["proxy"] : "")."&saveto=".urlencode($_GET["savedir"])."&orlink=".urlencode(base64_encode($_GET["orlink"]))."&link=".urlencode(base64_encode($Href)).($_GET["add_comment"] ? "&comment=".urlencode($_GET["comment"]) : "").($pauth ? "&pauth=".urlencode($pauth) : ""),$Href,$_GET["showdirect"] == "on");
+            exit;
+        }
+        
+    if ($lrapidlogin === false || $lrapidpass === false)
+        {
+            #print_r($Url);
+            $page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), 0, 0, 0, 0, $_GET["proxy"],$pauth);
+            is_page($page);
+            
+            is_present($page,"THIS FILE IS FORBIDDEN TO BE SHARED");
+            is_present($page,"This file has been deleted");
+    
+            is_present($page,"File ".$Url[path]." not found","File Not Found!");
+            is_present($page,"File ".$Url["path"]." has been deleted","This file has been deleted");
+            is_present($page,"Inactivity-timeout exceeded","Inactivity-timeout exceeded");
+            is_present($page,"Too many wrong codes","Too many wrong codes entered");
+    
+            unset($post);
+            
+            $fn=basename($LINK,'.html');
+            $action_url=trim(cut_str($page,'action="','"'));
+            
+            echo "<!-- action_url='$action_url' $fn -->\n";
+            $Url=parse_url($action_url);
+            
+            $post["dl.start"] = "Free";
+            $page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : "") ,0 , 0, $post, 0, $_GET["proxy"],$pauth);
+            is_page($page);
+            
+            is_present($page, "is not allowed to use the free-service anymore today","No More Free Downloads from this IP today");
+            is_present($page, "This file exceeds your download-limit.","Excess of the quota");
+            is_present($page, "KB in one hour","Excess of the quota");
+            is_present($page, "is already downloading a file","Your IP-address ".cut_str($page,'Your IP-address ','is already downloading a file.').'is already downloading a file. You have to wait until it is finished.');
+    
+            $server_id=trim(cut_str($page,'alert("Download-Server','unavailable due to technical-maintenance'));
+            is_present($page,"unavailable due to technical-maintenance","Download-Server $server_id unavailable due to technical-maintenance");
+    
+    
+            if (strstr($page, "Want to download more?"))
+                {
+                    $minutes = trim(cut_str($page, "(Or wait", "minute"));
+                    if ($minutes)
+                        {
+                            html_error("Service speaks that it is necessary to wait ".$minutes." minutes");
+                        }
+                            else
+                        {
+                            html_error("Service speaks that is reached download quota on this IP-address.");
+                        }
+                }
+    
+    
+            if(strstr($page, "Too many users downloading right now.") || strstr($page, "Too many connections"))
+                {
+                    html_error("Service indicates that too many users are connected<br><span id=\"repeat\"></span>\n<script>\nvar c = 10;\nfc();\nfunction fc() {\nif(c > 0)\n{\ndocument.getElementById(\"repeat\").innerHTML = \"Repetition through \" + c + ' сек.';\nc = c - 1;\nsetTimeout(\"fc()\", 1000)\n}\nelse\n{\nlocation.reload();\n}\n}\n</script>\n");
+                }
+            
+            $countDown = cut_str($page, "var c=", ";");            
+            
+            if($countDown){
+                $Href = urldecode(cut_str($page, "une"."scape('", "')"));
+                if(!$Href){ html_error("Error with the link (unescape)");}
+            }
+                $code = '<form name="dl"'.cut_str(($countDown?$Href:$page), '<form name="dl"', '</form>').'</form>';
+
+            if (!$code)
+                {
+                    html_error('Error get access code');
+                }
+            
+            $access_image_url=trim(cut_str($code,'enter<br><img src="','">'));
+            
+            if (!$access_image_url)
+                {
+                    html_error('Error get access image url'.$code);
+                }
+            
+            $newcap=false;
+    
+            $capthatag=cut_str($code,"here:",">");
+            $capthatag=cut_str($capthatag,'name="','"');
+            
+            if (!$capthatag)
+                {
+                    html_error("Error get captha name");
+                }
+            
+            if (!strstr($code,"dl.action='"))
+                {
+                    $mirror[]=cut_str($code,'<form name="dl" action="','"');
+                    $cap = (strstr($code,"Download <")) ? "Download <".cut_str($code,"Download <",")<").")" : "Download via".cut_str($code,'Download via',')<').")";
+                    $caption[]=$cap;
+                }
+                    else
+                {
+                    $max_speed=0;
+                    $code=str_replace('<font color="green">','',$code);
+                    $code=str_replace('<font color="red">','',$code); 
+                    $code=str_replace('</font>','',$code);
+                    
+                    $count___=0;
+                    while (strpos($code,"dl.action='"))
+                        {
+                            $code=substr($code,strpos($code,"dl.action='"));
+                            $mirror[$count___]=cut_str($code,"dl.action='","';");
+                            
+                            $cap = cut_str($code,"> Download via ","<");
+                            $caption[$count___]=$cap;        
+                            $count___++;    
+                            $code=substr($code,2);
+                        }
+                }
+            
+            if ($countDown) insert_timer($countDown, "Getting ticket.","",true);
+            
+            $FileAddr=$mirror[0];
+            $FileName=basename($FileAddr);
+            if (!$FileAddr)
+                {
+                    echo '<br>Something Wrong in this code... </br>';
+                    echo $code;
+                }
+    
+            echo "<table>\n";
+            
+            echo "<form action=$PHP_SELF method=post>\n";
+            echo "<input type=hidden name=command value=second>\n";
+            echo "<input type=hidden name=services value='rapidshare'>\n";
+            
+            echo "<input type=hidden name=capthatag value='$capthatag'>\n";
+
+            echo "<input type=hidden name=saveto value=".$_REQUEST[saveto].">\n";
+            echo "<input type=hidden name=savedir value=".urlencode($_REQUEST[savedir]).">\n";
+            echo "<input type=hidden name=ref value=".urlencode(base64_encode($Referer)).">\n";
+            echo "<input type=hidden name=orlink value=".urlencode(base64_encode($LINK)).">\n";
+            
+            echo ($_REQUEST["add_comment"] ? "<input type=hidden name=add_comment value=on>\n<input type=hidden name=comment value=".urlencode($_REQUEST[comment]).">\n" : "");
+            echo "<input type=hidden name=domail value=".$_GET[domail].">\n";
+            echo "<input type=hidden name=email value=".$_GET[email].">\n";
+            echo "<input type=hidden name=useproxy value=".$_GET[useproxy].">\n";
+            echo "<input type=hidden name=proxy value=".$_GET[proxy].">\n";
+            echo "<input type=hidden name=split value=".$_GET[split].">\n";
+            echo "<input type=hidden name=method value=".$_GET[method].">\n";
+            echo "<input type=hidden name=partSize value=".$_GET[partSize].">\n";
+            echo "<input type=hidden name=showdirect value=".($_GET["showdirect"] == "on" ? "on" : "").">\n";
+            echo ($pauth ? "<input type=hidden name=pauth value=".urlencode($pauth).">\n" : "");
+            
+            for ($g=0; $g<count($mirror); $g++)
+                {
+                    echo "<tr><td><input type=radio name=link value='".$mirror[$g]."'".($g == 0 ? " checked" : "").">".$caption[$g]."</td></tr>\n";
+                }
+
+            $newlink=(($loadcaptha_old === true) || ((strpos($access_image_url,'https://') === 0) && ($ssl_image_direct === true))) ? $access_image_url : "$PHP_SELF?command=image&link=".urlencode(base64_encode($access_image_url))."&ref=".urlencode(base64_encode('http://'.$Url["host"])).($_GET["useproxy"] == "on" ? "&useproxy=on&proxy=".$_GET["proxy"] : "").($pauth ? "&pauth=".urlencode($pauth) : "");
+            echo "<tr><td><h3>Please enter <img align=middle src=\"$newlink\"> here: <input type=text name=accesscode size=7 maxlength=7>  <input type=\"submit\" name=\"actionstring\" value=\"Download file\"></h3></tr></form>";
+            echo "</table>";
+        }
+?>

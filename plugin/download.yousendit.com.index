@@ -1,0 +1,4 @@
+<?php
+	$firstpage_plugin["download.yousendit.com"]="download.yousendit.com.$first_plug_ext";
+	$supported_service[]="download.yousendit.com";
+?>

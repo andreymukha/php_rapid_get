@@ -1,0 +1,66 @@
+<?php
+	$form_url=base64_decode(urldecode($_REQUEST["formurl"]));
+	$access_image_url=base64_decode(urldecode($_REQUEST["access_image_url"]));
+	
+	$Url=parse_url($form_url);
+	
+	
+	$cookies=unserialize(base64_decode(urldecode($_REQUEST["cookie"])));
+	$post[$_REQUEST['cupname']]=$_REQUEST[accesscode];
+	$post['fid']=$_REQUEST['fid'];
+	
+	$page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), $LINK, $cookies, $post, 0, $_GET["proxy"],$pauth);
+	is_page($page);
+	
+	if (strstr($page,'неверный код'))
+		{
+			echo "<center><font color=red>Incorrect is entered a code of the access. Retry</font></center><p>\n";
+			
+			$access_image_cod=trim(cut_str($page,'src="/secret/','"'));
+			if (!$access_image_cod) html_error('This service change protect method. Error get image URL');
+			$access_image_url=$Url["scheme"]."://".$Url["host"].':'.defport($Url).'/secret/'.$access_image_cod.'?temp='.time();
+			$newlink=($loadcaptha_old === true) ? $access_image_url : "$PHP_SELF?command=image&link=".urlencode(base64_encode($access_image_url))."&ref=".urlencode(base64_encode("http://uploading.com/")).($_GET["useproxy"] == "on" ? "&useproxy=on&proxy=".$_GET["proxy"] : "").($pauth ? "&pauth=".urlencode($pauth) : "");
+			
+			echo "<form action=$PHP_SELF method=post>\n";
+			echo "<input type=hidden name=command value=second>\n";
+			echo "<input type=hidden name=services value='www.upload.com.ua'>\n";
+			echo "<input type=hidden name=cupname value='".$_REQUEST['cupname']."'>\n";
+			echo "<input type=hidden name=fid value='".$_REQUEST['fid']."'>\n";
+		
+			echo "<input type=hidden name=formurl value='".$_REQUEST['formurl']."'>\n";
+			echo "<input type=hidden name=access_image_url value='".urlencode(base64_encode($newlink))."'>\n";
+			
+			$cookies=base64_encode(serialize(GetCookies($page)));
+			echo "<input type=hidden name=cookie value='".urlencode($cookies)."'>\n";
+			
+			echo "<input type=hidden name=saveto value=".$_REQUEST[saveto].">\n";
+			echo "<input type=hidden name=savedir value=".urlencode($_REQUEST[savedir]).">\n";
+			echo "<input type=hidden name=ref value=".urlencode(base64_encode($LINK)).">\n";
+			echo "<input type=hidden name=orlink value=".urlencode(base64_encode($LINK)).">\n";
+			echo "<input type=hidden name=link value=".urlencode(base64_encode($LINK)).">\n";
+			echo ($_REQUEST["add_comment"] ? "<input type=hidden name=add_comment value=on>\n<input type=hidden name=comment value=".urlencode($_REQUEST[comment]).">\n" : "");
+			echo "<input type=hidden name=domail value=".$_GET[domail].">\n";
+			echo "<input type=hidden name=email value=".$_GET[email].">\n";
+			echo "<input type=hidden name=useproxy value=".$_GET[useproxy].">\n";
+			echo "<input type=hidden name=proxy value=".$_GET[proxy].">\n";
+			echo "<input type=hidden name=split value=".$_GET[split].">\n";
+			echo "<input type=hidden name=method value=".$_GET[method].">\n";
+			echo "<input type=hidden name=partSize value=".$_GET[partSize].">\n";
+			echo "<input type=hidden name=showdirect value=".($_GET["showdirect"] == "on" ? "on" : "").">\n";
+			echo ($pauth ? "<input type=hidden name=pauth value=".urlencode($pauth).">\n" : "");
+		
+			echo "<h3>Please enter <img align=middle src=\"$newlink\"> here: <input type=text name=accesscode size=6 style=\"width:70px;\">  <input type=submit value=\"Download file\"></h3>\n";
+			echo "</form>\n";
+
+			exit;
+		}
+		
+	$fl_array = array_pop(preg_grep('/id="showlink"/', explode("\n",$page)));
+	$Href=cut_str($fl_array,'href="','"');
+
+	if (!$Href) { html_error('Error get direct link'); }
+	$Url = parse_url($Href);
+	$FileName = !$FileName ? basename($Url["path"]) : $FileName;
+
+	insert_location("$PHP_SELF?command=download&FileName=".urlencode(base64_encode($FileName))."&host=".urlencode(base64_encode($Url[host]))."&path=".urlencode(base64_encode($Url[path].($Url["query"] ? "?".$Url["query"] : "")))."&referer=".urlencode(base64_encode($Referer)).addmailtolink_2()."&proxy=".($_GET["useproxy"] ? $_GET["proxy"] : "")."&saveto=".urlencode($_GET["savedir"])."&orlink=".urlencode(base64_encode($_GET["orlink"]))."&link=".urlencode(base64_encode($Href)).($_REQUEST["add_comment"] ? "&add_comment=on&comment=".urlencode($_REQUEST[comment]) : "").($pauth ? "&pauth=".urlencode($pauth) : ""),$Href,$_GET["showdirect"] == "on");
+?>

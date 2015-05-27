@@ -1,0 +1,66 @@
+<?php
+	$post["confirmed_number"]=$_REQUEST[accesscode];
+	$post["session"]=$_REQUEST[session_id];
+	$post["action"]="1";
+	$fid=substr($Url["path"], 1);
+	$post["file_id"]=$fid;
+	if ($_REQUEST["requery_pass"] == 1) { $post["pswd"]=$_REQUEST["password"]; }
+	
+	$page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), $LINK, 0, $post, 0, $_GET["proxy"],$pauth);
+	$loc=cut_str($page,"Location: ","\r");
+	if ($loc) {
+	$Url=parse_url($loc);
+	$page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), 0, 0, 0, 0, $_GET["proxy"],$pauth);}
+	#echo "1)".$Url["host"]."<br>";
+	#echo "2)".defport($Url)."<br>";
+	#echo "3)".$Url["path"].($Url["query"] ? "?".$Url["query"] : "")."<br>";
+	#echo "4)".$LINK."<br>";
+	#foreach($post as $tmp)
+	#{
+	# echo $tmp."<br>";
+	#}
+	#echo $page;
+	is_page($page);
+	if (strstr($page,'неверный код'))
+		{
+			echo "<center><font color=red>Incorrect is entered a code of the access. Retry</font></center><p>\n";
+			
+			$newlink=base64_decode(urldecode($_REQUEST["access_image_url"]));
+			echo "<form action=$PHP_SELF method=post>\n";
+			echo "<input type=hidden name=command value=second>\n";
+			echo "<input type=hidden name=services value='ifolder.ru'>\n";
+			echo "<input type=hidden name=access_image_url value='".$_REQUEST["access_image_url"]."'>\n";
+					
+			echo "<input type=hidden name=session_id value='".$_REQUEST[session_id]."'>\n";
+			echo ($_REQUEST[requery_pass] === 1) ? "<input type=hidden name=requery_pass value=1>\n<input type=hidden name=password value=".($_REQUEST["password"]).">\n" : "";
+
+			echo "<input type=hidden name=saveto value=".$_REQUEST[saveto].">\n";
+			echo "<input type=hidden name=savedir value=".urlencode($_REQUEST[savedir]).">\n";
+			echo "<input type=hidden name=ref value=".urlencode(base64_encode($Referer)).">\n";
+			echo "<input type=hidden name=orlink value=".urlencode(base64_encode($LINK)).">\n";
+			echo "<input type=hidden name=link value=".urlencode(base64_encode($LINK)).">\n";
+			echo ($_REQUEST["add_comment"] ? "<input type=hidden name=add_comment value=on>\n<input type=hidden name=comment value=".urlencode($_REQUEST[comment]).">\n" : "");
+			echo "<input type=hidden name=domail value=".$_GET[domail].">\n";
+			echo "<input type=hidden name=email value=".$_GET[email].">\n";
+			echo "<input type=hidden name=useproxy value=".$_GET[useproxy].">\n";
+			echo "<input type=hidden name=proxy value=".$_GET[proxy].">\n";
+			echo "<input type=hidden name=split value=".$_GET[split].">\n";
+			echo "<input type=hidden name=method value=".$_GET[method].">\n";
+			echo "<input type=hidden name=partSize value=".$_GET[partSize].">\n";
+			echo "<input type=hidden name=showdirect value=".($_GET["showdirect"] == "on" ? "on" : "").">\n";
+			echo ($pauth ? "<input type=hidden name=pauth value=".urlencode($pauth).">\n" : "");
+	
+			echo "<h3>Please enter <img align=middle src=\"$newlink\"> here: <input type=text name=accesscode size=6 maxlength=6>  <input type=\"submit\" name=\"actionstring\" value=\"Download file\"></h3>\n";
+			echo "</form>\n";
+
+			exit;
+		}
+	is_present($page,'На данный момент иностранный трафик у этого файла превышает Российский.','The Foreign traffic exceeds Russian.');
+	is_notpresent($page,'Ссылка для скачивания файла:','File not found or Incorrect entered cod');
+	$Href=cut_str($page,'Ссылка для скачивания файла:<br><br><a href="','"');
+	if (!$Href) { html_error('Error get direct link'); }
+	$Url = parse_url($Href);
+	$FileName = !$FileName ? basename($Url["path"]) : $FileName;
+
+	insert_location("$PHP_SELF?command=download&FileName=".urlencode(base64_encode($FileName))."&host=".urlencode(base64_encode($Url[host]))."&path=".urlencode(base64_encode($Url[path].($Url["query"] ? "?".$Url["query"] : "")))."&referer=".urlencode(base64_encode($Referer)).addmailtolink_2()."&proxy=".($_GET["useproxy"] ? $_GET["proxy"] : "")."&saveto=".urlencode($_GET["savedir"])."&orlink=".urlencode(base64_encode($_GET["orlink"]))."&link=".urlencode(base64_encode($Href)).($_REQUEST["add_comment"] ? "&add_comment=on&comment=".urlencode($_REQUEST[comment]) : "").($pauth ? "&pauth=".urlencode($pauth) : ""),$Href,$_GET["showdirect"] == "on");
+?>

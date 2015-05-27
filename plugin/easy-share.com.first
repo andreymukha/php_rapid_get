@@ -1,0 +1,67 @@
+<?php
+	$page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), 0, 0, 0, 0, $_GET["proxy"],$pauth);
+	is_page($page);
+
+	is_present($page,'File was deleted');
+	
+	if(strstr($page, "dwait")){
+		$action_url=cut_str($page,'var u=\'','\';')."-A1-R0".mt_rand();
+		$action_url="http://".$Url["host"]."".$action_url."";
+		
+		$url = parse_url($action_url);
+		$countDown = cut_str($page,"var w='","'");
+		insert_timer($countDown, "Getting ticket.","",true);
+		$page = geturl($url["host"], defport($url), $url["path"].($url["query"] ? "?".$url["query"] : ""), 0, 0, 0, 0, $_GET["proxy"],$pauth);
+		is_page($page);
+		$page = urldecode($page);
+		is_notpresent($page,"200 OK","Error Get Ajax Url");
+	}
+
+	is_notpresent($page,'File size','Invalid file ID');
+	
+	
+	$id = cut_str($page,'id" value="','"');
+	$FileName = cut_str($page,'filename" value="','"');
+	$params = cut_str($page,'params" value="','"');
+	$domain =$Url["host"];
+	$code_open=cut_str($page,'code_open" value="','"');
+	$tmp = cut_str($page,'code_close',"submit");
+	//print_r($tmp);
+	$capcha = cut_str($tmp,'src="','"');
+	$start_url = 'http://'.$Url["host"].'/'.$id.'/'.'capcha-'.$code_open.'-';
+	$close_url = '/'.$FileName.'?'.$params;
+	$newlink = $Url["scheme"].'://'.$Url["host"].$capcha;
+	
+	echo "<form action=$PHP_SELF method=post>\n";
+	echo "<input type=hidden name=command value=second />\n";
+	echo "<input type=hidden name=services value='".$Url["host"]."' />\n";
+	
+echo "<input type=\"hidden\" name=\"id\" value=\"$id\">";
+echo "<input type=\"hidden\" name=\"filename\" value=\"$FileName\">";
+echo "<input type=\"hidden\" name=\"params\" value=\"$params\">";
+echo "<input type=\"hidden\" name=\"domain\" value=\"".$Url["host"]."\">";
+echo "<input type=\"hidden\" name=\"code_open\" value=\"$code_open\">";
+		
+	echo "<input type=hidden name=starturl value='".urlencode(base64_encode($start_url))."' />\n";
+	echo "<input type=hidden name=closeurl value='".urlencode(base64_encode($close_url))."' />\n";
+	echo "<input type=hidden name=FileName value='".urlencode(base64_encode($FileName))."' />\n";
+
+	echo "<input type=hidden name=saveto value='".$_REQUEST[saveto]."' />\n";
+	echo "<input type=hidden name=savedir value='".urlencode($_REQUEST[savedir])."' />\n";
+	echo "<input type=hidden name=ref value='".urlencode(base64_encode($Referer))."' />\n";
+	echo "<input type=hidden name=orlink value='".urlencode(base64_encode($LINK))."' />\n";
+	echo "<input type=hidden name=link value='".urlencode(base64_encode($LINK))."' />\n";
+	echo ($_REQUEST["add_comment"] ? "<input type=hidden name=add_comment value=on>\n<input type=hidden name=comment value='".urlencode($_REQUEST[comment])."' />\n" : "");
+	echo "<input type=hidden name=domail value='".$_GET[domail]."' />\n";
+	echo "<input type=hidden name=email value='".$_GET[email]."' />\n";
+	echo "<input type=hidden name=useproxy value='".$_GET[useproxy]."' />\n";
+	echo "<input type=hidden name=proxy value='".$_GET[proxy]."' />\n";
+	echo "<input type=hidden name=split value='".$_GET[split]."' />\n";
+	echo "<input type=hidden name=method value='".$_GET[method]."' />\n";
+	echo "<input type=hidden name=partSize value='".$_GET[partSize]."' />\n";
+	echo "<input type=hidden name=showdirect value='".($_GET["showdirect"] == "on" ? "on" : "")."' />\n";
+	echo ($pauth ? "<input type=hidden name=pauth value='".urlencode($pauth)."' />\n" : "");
+
+			echo "<h3>Please enter <img align=middle src=\"$newlink\"> here: <input type=text name=accesscode size=4 maxlength=6 />  <input type=\"submit\" name=\"actionstring\" value=\"Download file\" /></h3>\n";
+			echo "</form>\n";
+?>

@@ -1,0 +1,6 @@
+<?php
+	$firstpage_plugin["rutube.ru"]="rutube.ru.$first_plug_ext";
+    $firstpage_plugin["www.rutube.ru"]="rutube.ru.$first_plug_ext";
+	$supported_service[]="rutube.ru";
+    $supported_service[]="www.rutube.ru";
+?>

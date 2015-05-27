@@ -1,0 +1,51 @@
+<?php
+	//Этот блок желательно не редактировать, он служебный.
+		$serverurl="http://www.adme.ru";
+		$page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), '', $cookies, 0, 0, $_GET["proxy"],$pauth);
+		$Referer=$link;
+
+	//Смотрим скрытую ссылку
+	preg_match_all("'<div class=\"rolik_watch\">(.+?)<p freehrefs=\"(.*?)\">(.+?)</div>'si",$page,$rss);
+	if (!$rss[1][0]) {					  preg_match_all("'<div class=\"rolik_watch\">(.+?)<a href=\"/files/(.*?)\">(.+?)</div>'si",$page,$rss);
+					  $vstavka="/files/";
+		              if (!$rss[1][0])
+		            				  {		            				   preg_match_all("'<div class=\"print\">(.+?)<img src=\"(.*?)\" alt=\"\" />(.+?)</div>'si",$page,$rss);
+							           $vstavka="";
+							           if (!$rss[1][0])
+													   {													   	preg_match_all("'<div class=\"material_print\">(.+?)<img src=\"(.*?)\"(.+?)</a>'si",$page,$rss);
+													   	$vstavka="";													    if (!$rss[1][0])
+							           				    			    {											           				    preg_match_all("'<div class=\"print\">(.+?)<param name=\"movie\" value=\"http://www.youtube.com/v/(.*?)\" />(.+?)</div>'si",$page,$rss);
+								   			           				    if (!$rss[1][0]) html_error('Все... лавочка накрылась. Плагин не может получить ссылку, готовь 84 рубля.');
+							       				    				    $rss = $rss[2][0];
+							           								    $rss = 'http://www.youtube.com/watch?v='.$rss;
+											           				    echo "Вот ссылка на загрузку: ".$rss."<br>Если загрузка не началась в течении 10 секунд, нажми <a href=".$PHP_SELF."/?command=request&link=".$rss.">сюда</a>";
+											           				    insert_location("$PHP_SELF/?command=request&link=$rss");
+											           				    die();
+							    				       				    }
+							  							echo "<script language=javascript>alert('По этой ссылке могу скачать только preview.')</script>";
+														}
+									  }
+	}
+	$rss = $rss[2][0];
+	//Правим ссылку.
+		$result= $serverurl.$vstavka.$rss;
+	//Тут формируем ссылку для загрузки
+	$url_ = parse_url($result);
+	$Href = $result;
+	$FileName = !$FileName ? basename($url_["path"]) : $FileName;
+	insert_location("$PHP_SELF?command=download&FileName=".urlencode(base64_encode($FileName))."&cookie=".urlencode(base64_encode(serialize($cookies)))."&host=".urlencode(base64_encode($url_[host]))."&path=".urlencode(base64_encode($url_[path].($url_["query"] ? "?".$url_["query"] : "")))."&referer=".urlencode(base64_encode($Referer)).addmailtolink_2()."&proxy=".($_GET["useproxy"] ? $_GET["proxy"] : "")."&saveto=".urlencode($_GET["savedir"])."&orlink=".urlencode(base64_encode($_GET["orlink"]))."&link=".urlencode(base64_encode($Href)).($_REQUEST["add_comment"] ? "&add_comment=on&comment=".urlencode($_REQUEST[comment]) : "").($pauth ? "&pauth=".urlencode($pauth) : ""),$Href,$_GET["showdirect"] == "on");
+
+//Adme.ru сентябрь 2007
+//ru-board member triton4ik
+//Спасибо: Vincome, Kamyshew, Pominov, Cracklover - за всяческую помощь.
+
+
+
+//Внимание!!!
+//Плагин Вы используете на свой страх и риск.
+//Полную ответственность за использование плагина несете(лежит на) ВЫ(пользователе).
+//Автор не несет ни какой ответственности как за данный плагин, так и за его применение, использование и т.д. и т.п.
+//Плагин является ознакомительным прежде всего для админов letitbit.net.
+//Публиковать этот файл на других серверах запрещено.
+//Распростронять за пределы форума forum.ru-board.com запрещено.
+?>

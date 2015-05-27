@@ -1,0 +1,5 @@
+<?php
+	$secondpage_plugin["binfile.org"]="binfile.org.$second_plug_ext";
+	$firstpage_plugin["binfile.org"]="binfile.org.$first_plug_ext";
+	$supported_service[]="binfile.org";
+?>

@@ -1,0 +1,6 @@
+<?php
+	$firstpage_plugin["cocoshare.cc"]="cocoshare.cc.$first_plug_ext";
+	$firstpage_plugin["www.cocoshare.cc"]="cocoshare.cc.$first_plug_ext";
+	$supported_service[]="cocoshare.cc";
+	$supported_service[]="www.cocoshare.cc";
+?>

@@ -1,0 +1,86 @@
+<?php
+//Большое спасибо Mike Samokhvalov за разработку методики и помощь в создании плагина.
+//Основано на исходном коде Mike Samokhvalov
+//Плагин подготовил Triton4ik
+
+
+
+	//Всяческие параметры
+	$referer=$link;
+	$agent = "Opera/9.50 (Windows NT 5.1; U; en)";
+
+		//Получаем страницу в переменную
+		$page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), '', $cookies, 0, 0, $_GET["proxy"],$pauth);
+		//Получаем куки
+		$cookies=GetCookies($page);
+	/*===1===*/
+	//Вырезаем из javascript нужные нам переменные
+	preg_match("'cG\(\'(.*?)\',\'(.*?)\',\'(.*?)\'\);'si",$page,$params);
+	/*===2===*/
+	//Формируем адрес с которого заберем оставшиеся переменные
+	$action_url = "http://www.mediafire.com/dynamic/download.php?qk=" . $params[1] . "&pk=" . $params[2] . "&r=" . $params[3];
+	//Переменная с адресом узла! Должна быть отличной от предыдущей!
+	$url = parse_url($action_url);
+	//Получаем страницу в переменную
+	$page = geturl($url["host"], defport($url), $url["path"].($url["query"] ? "?".$url["query"] : ""), '', $cookies, 0, 0, $_GET["proxy"],$pauth);
+	is_page($page);
+	/*===4===*/
+	//функция получения значений переменных
+	function get_variable_value($name /* имя переменной */, $page /* тело документа */)
+	{$name = strtolower($name); $p = "";
+	preg_match("/var\s*" . $name. "\s*=\s*\'?([^\'\"\s]+)\'?\s*;/i", $page, $p);
+	if(count($p) > 1){return $p[1]; }return NULL; }
+	/*===3===*/
+	//Выдераем ссылку
+	preg_match("/href=.\"http:\/\/\"([^\>]+)\>/i", $page, $p);
+	//Выдераем из ссылки переменные которые надо получить
+	preg_match("/\+\s*([0-9a-z]+)\s*\+\'\/\'\+\s*([0-9a-z]+)\s*\+\'.?\/\'\+\s*([0-9a-z]+)\s*\+\'\/\'\+\s*([0-9a-z]+)\s*\+/i", $p[1], $p);
+	/*===4===*/
+	if(count($p) > 4)        
+	{ 
+	//Получаем переменные по их названию из javascript со страницы       
+        $v1 = get_variable_value($p[1], $page);
+        $v2 = get_variable_value($p[2], $page);
+        $v3 = get_variable_value($p[3], $page);
+        $v4 = get_variable_value($p[4], $page);
+        $link = "http://" . $v1 . "/" . $v2 . "g/" . $v3 . "/" . $v4;
+	}
+//Все ссылку мы получили - $link.
+
+
+// Определим значение переменной H   
+    $h = 0;    
+    preg_match("/var\s*h\s*=\s*(-?\d+)\s*;/i", $page, $p);
+    if(count($p) > 0)
+      $h = intval($p[0]);
+switch($h)
+    {
+      case 15:
+      {
+      }
+      break;
+      case -22: $message = "NOTICE: No servers are currently available with the requested data on them.  Please retry your request in a moment.";break;
+      case -19: $message = "Error: The content no longer seems to be available via MediaFire.";break;
+      case -12:$message = "Error: The file you attempted to download seems to be invalid and is most likely no longer available.";break;
+      case -11:$message = "Error: We are currently unable to service your download request, please retry your request in a few minutes or contact support for further assistance.  Please report this key to support (dxyixyjtn7s)";break;
+      case -10:$message = "Error: The database supporting the requested data is unavailable, please retry your request in a few minutes."; break;
+      case -7:$message = "Error: You must wait a minute before submitting another suggestion.";break;
+      case -6:
+      case -5:
+      case -4:$message = "Error: There was a error (" . $h . ") in the data submitted.  Please reload the page and try your request again.";break;
+      case -2:$message = "Error: Your cookies are not functioning properly.  MediaFire requires cookies be enabled for downloading.  Please enable cookies for this site, reload the webpage and try your request again.\n\nNOTE: If you have virus checkers, anti-spyware tools or the like installed, they can sometimes prevent cookies being relayed.  Try enabling cookie support for this site in those applications and retry your request.";break;
+      case -1:$message = "Error: There was an error with the data you entered, please check the entries and try again.";break;
+      case 0:
+      default:$message = "OK";break;
+    }
+    
+    echo $message .$link. "<br><br>";exit;
+
+
+	//Тут готовим ссылку для загрузки и прочие параметры
+	if (!$result) html_error('Error get direct link');
+	$url_ = parse_url($link);
+	$Href = $link;
+	$FileName = !$FileName ? basename($url_["path"]) : $FileName;
+	insert_location("$PHP_SELF?command=download&FileName=".urlencode(base64_encode($FileName))."&cookie=".urlencode(base64_encode(serialize($cookies)))."&host=".urlencode(base64_encode($url_[host]))."&path=".urlencode(base64_encode($url_[path].($url_["query"] ? "?".$url_["query"] : "")))."&referer=".urlencode(base64_encode($Referer)).addmailtolink_2()."&proxy=".($_GET["useproxy"] ? $_GET["proxy"] : "")."&saveto=".urlencode($_GET["savedir"])."&orlink=".urlencode(base64_encode($_GET["orlink"]))."&link=".urlencode(base64_encode($Href)).($_REQUEST["add_comment"] ? "&add_comment=on&comment=".urlencode($_REQUEST[comment]) : "").($pauth ? "&pauth=".urlencode($pauth) : ""),$Href,$_GET["showdirect"] == "on");
+?>

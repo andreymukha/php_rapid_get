@@ -1,0 +1,27 @@
+<?php
+	$page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), 0, 0, 0, 0, $_GET["proxy"],$pauth);
+	is_page($page);
+	$cookies=GetCookies($page);
+	is_present($page,'Location: http://www.filemaster.ru/?p=expired', 'Request file not found');
+	is_present($page,'Location: http://filemaster.ru/?p=expired', 'Request file not found');
+	
+	$Referer = $Url["host"].$Url["path"].($Url["query"] ? "?".$Url["query"] : "");
+
+        $NeedPass = trim(cut_str($page, "<td><input type='password' name='", "' class='inp'></td>"));
+        if ($NeedPass == "pass")
+        {
+         if (!$_REQUEST["password"]) { html_error('File is protected via password'); }
+         $post["pass"]=$_REQUEST["password"];
+         $page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), $Referer , $cookies, $post, 0, $_GET["proxy"],$pauth);
+        }
+
+	$Href=cut_str($page,"'downloadlink' href='","'>");
+
+	if (!$Href) { html_error('Error get direct link'); }
+
+	$Url = parse_url($Href);
+	$FileName = !$FileName ? basename($Url["path"]) : $FileName;
+
+        insert_location("$PHP_SELF?command=download&FileName=".urlencode(base64_encode($FileName))."&cookie=".urlencode(base64_encode(serialize($cookies)))."&host=".urlencode(base64_encode($Url[host]))."&path=".urlencode(base64_encode($Url[path].($Url["query"] ? "?".$Url["query"] : "")))."&referer=".urlencode(base64_encode($Referer))."&proxy=".($_GET["useproxy"] ? $_GET["proxy"] : "")."&saveto=".urlencode($_GET["savedir"])."&orlink=".urlencode(base64_encode($_GET["orlink"]))."&link=".urlencode(base64_encode($Href)).($_REQUEST["add_comment"] ? "&add_comment=on&comment=".urlencode($_REQUEST[comment]) : "").($pauth ? "&pauth=".urlencode($pauth) : ""),$Href,$_GET["showdirect"] == "on");
+
+?>

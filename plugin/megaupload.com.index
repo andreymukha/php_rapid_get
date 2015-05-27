@@ -1,0 +1,15 @@
+<?php
+	$secondpage_plugin["megaupload.com"]="megaupload.com.$second_plug_ext";
+	$secondpage_plugin["www.megaupload.com"]="megaupload.com.$second_plug_ext";
+	$firstpage_plugin["megaupload.com"]="megaupload.com.$first_plug_ext";
+	$firstpage_plugin["www.megaupload.com"]="megaupload.com.$first_plug_ext";
+	$supported_service[]="megaupload.com";
+	$supported_service[]="www.megaupload.com";
+	
+	$megaupload_login=false;
+	$megaupload_pass=false;
+
+#	$subdomain_plugin[]="megaupload.com";
+#	$subreplace_plugin["megaupload.com"]=true;
+
+?>

@@ -1,0 +1,28 @@
+<?php
+	$page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), 0, 0, 0, 0, $_GET["proxy"] ,$pauth);
+	is_page($page);
+	
+        $match[0] = cut_str($page,"video_id\": \"","\"");
+	$match[1] = cut_str($page, '"t": "',"\"");
+		
+	$url ='http://youtube.com/get_video?video_id='.$match[0].'&t='.$match[1];
+        $Url = parse_url($url);
+        $page = geturl($Url["host"], defport($Url), $Url["path"].($Url["query"] ? "?".$Url["query"] : ""), 0, 0, 0, 0, $_GET["proxy"] ,$pauth);               
+        is_page($page);
+        $locat = cut_str($page,"Location: ","\r\n");
+        if(empty($locat)) html_error("Error get location link / Ошибка перенаправления сайта yuotube");
+        $url = parse_url($locat);
+        $FileName =  basename($url["path"]);
+        if ($FileName == 'get_video' || !$FileName){
+            $tmp = str_replace("video_id=","",$url['query']);
+            if(empty($tmp)) html_error("Error file name / Ошибка имени файла! ".$locat);
+            $FileName = $tmp.".flv";
+        }
+    
+    insert_location("$PHP_SELF?command=download&FileName=".urlencode(base64_encode($FileName))."&host=".urlencode(base64_encode($url[host]))."&path=".urlencode(base64_encode($url[path].($url["query"] ? "?".$url["query"] : "")))."&referer=".urlencode(base64_encode($Referer))."&email=".($_GET["domail"] ? $_GET["email"] : "")."&partSize=".($_GET[split] ? $_GET[partSize] : "")."&method=".$_GET[method]."&proxy=".($_GET["useproxy"] ? $_GET["proxy"] : "")."&saveto=".urlencode($_GET["savedir"])."&orlink=".urlencode(base64_encode($_GET["orlink"]))."&link=".urlencode(base64_encode($locat)).($_REQUEST["add_comment"] ? "&add_comment=on&comment=".urlencode($_REQUEST[comment]) : "").($pauth ? "&pauth=".urlencode($pauth) : "") ,$locat,$_GET["showdirect"] == "on");
+    
+    /*Download plugin from youtube.com by Director Of Zoo (ru-board member - kamyshew) 2007. Only for Rapidget!!! No rapidkill!!! No Checkmate & Co!!! No plagiarism!!!
+        Based by source - Takashi Ohida
+    
+    */
+?>

@@ -1,0 +1,6 @@
+<?php
+	$secondpage_plugin["www.sharebigfile.com"]="www.sharebigfile.com.$second_plug_ext";
+	
+	$firstpage_plugin["www.sharebigfile.com"]="www.sharebigfile.com.$first_plug_ext";
+	$supported_service[]="www.sharebigfile.com";
+?>

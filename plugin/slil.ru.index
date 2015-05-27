@@ -1,0 +1,6 @@
+<?php
+	$firstpage_plugin["slil.ru"]="slil.ru.$first_plug_ext";
+	$firstpage_plugin["zalil.ru"]="slil.ru.$first_plug_ext";
+	$supported_service[]="slil.ru";
+	$supported_service[]="zalil.ru";
+?>

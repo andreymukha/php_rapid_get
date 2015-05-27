@@ -1,0 +1,7 @@
+<?php
+	$secondpage_plugin["www.paid4load.de"]="paid4load.de.$second_plug_ext";
+	$firstpage_plugin["paid4load.de"]="paid4load.de.$first_plug_ext";
+	$firstpage_plugin["www.paid4load.de"]="paid4load.de.$first_plug_ext";
+	$supported_service[]="paid4load.de";
+	$supported_service[]="www.paid4load.de";
+?>

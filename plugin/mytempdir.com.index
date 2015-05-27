@@ -1,0 +1,8 @@
+<?php
+	$firstpage_plugin["mytempdir.com"]="mytempdir.com.$first_plug_ext";
+	$firstpage_plugin["www.mytempdir.com"]="mytempdir.com.$first_plug_ext";
+	$firstpage_plugin["sr1.mytempdir.com"]="mytempdir.com.$first_plug_ext";
+	$supported_service[]="mytempdir.com";
+	$supported_service[]="www.mytempdir.com";
+	$supported_service[]="sr1.mytempdir.com";
+?>

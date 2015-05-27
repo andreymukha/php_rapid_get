@@ -1,0 +1,6 @@
+<?php
+	$firstpage_plugin["youtube.com"]="youtube.com.$first_plug_ext";
+    $firstpage_plugin["www.youtube.com"]="youtube.com.$first_plug_ext";
+	$supported_service[]="youtube.com";
+    $supported_service[]="www.youtube.com";
+?>
