@@ -1,6 +1,6 @@
 <?php
-	$post["confirmed_number"]=$_REQUEST[accesscode];
-	$post["session"]=$_REQUEST[session_id];
+	$post["confirmed_number"]=$_REQUEST['accesscode'];
+	$post["session"]=$_REQUEST['session_id'];
 	$post["action"]="1";
 	$fid=substr($Url["path"], 1);
 	$post["file_id"]=$fid;
@@ -28,7 +28,7 @@
 			$newlink=base64_decode(urldecode($_REQUEST["access_image_url"]));
 			echo "<form action=$PHP_SELF method=post>\n";
 			echo "<input type=hidden name=command value=second>\n";
-			echo "<input type=hidden name=services value='ifolder.ru'>\n";
+			echo "<input type=hidden name=services value='rusfolder.com'>\n";
 			echo "<input type=hidden name=access_image_url value='".$_REQUEST["access_image_url"]."'>\n";
 					
 			echo "<input type=hidden name=session_id value='".$_REQUEST[session_id]."'>\n";

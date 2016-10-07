@@ -1,0 +1,14 @@
+<?php
+	$secondpage_plugin["rusfolder.com"]="rusfolder.com.$second_plug_ext";
+	
+	$firstpage_plugin["filearchiv.ru"]="rusfolder.com.$first_plug_ext";
+	$firstpage_plugin["rusfolder.com"]="rusfolder.com.$first_plug_ext";
+	$firstpage_plugin["multifile.ru"]="rusfolder.com.$first_plug_ext";
+
+	$supported_service[]="rusfolder.com";
+	$supported_service[]="filearchiv.ru";
+	$supported_service[]="multifile.ru";
+
+	$subdomain_plugin[]="rusfolder.com";
+	$subreplace_plugin["rusfolder.com"]=true;
+?>

@@ -1,12 +1,12 @@
 <?
 	$authorization=false;
-	#false - áåç àâòîðèçàöèè;
-	#èíà÷å çàïèñè â ôîðìàòå
+	#false - Ð±ÐµÐ· Ð°Ð²Ñ‚Ð¾Ñ€Ð¸Ð·Ð°Ñ†Ð¸Ð¸;
+	#Ð¸Ð½Ð°Ñ‡Ðµ Ð·Ð°Ð¿Ð¸ÑÐ¸ Ð² Ñ„Ð¾Ñ€Ð¼Ð°Ñ‚Ðµ
 	#$authorization['login1']='pass1';
 	#$authorization['login2']='pass2_a';
 	#$authorization['login2']='pass2_b';
 
-	#ïàðîëü ìîæíî çàäàòü â âèäå MD5 õåøà 'MD5:md5 ïàðîëÿ';
+	#Ð¿Ð°Ñ€Ð¾Ð»ÑŒ Ð¼Ð¾Ð¶Ð½Ð¾ Ð·Ð°Ð´Ð°Ñ‚ÑŒ Ð² Ð²Ð¸Ð´Ðµ MD5 Ñ…ÐµÑˆÐ° 'MD5:md5 Ð¿Ð°Ñ€Ð¾Ð»Ñ';
 
 	#$authorization['login1']='MD5:ABC76D42EBF491A0280C6F36DFDB2164';
 	#$authorization['login2']='MD5:D13B5D6689A2F686D18FCC41FC448898';
